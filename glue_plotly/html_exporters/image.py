@@ -129,10 +129,6 @@ class PlotlyImage2DExport(Tool):
                 # get image data and scale it down to default size
                 img = layer_state.layer['PRIMARY']
 
-                x = layer_state.layer[self.viewer.state.x_att_world]
-                y = layer_state.layer[self.viewer.state.y_att_world]
-                print(self.viewer.state.reference_data[self.viewer.state.x_att_world])
-
                 marker = {}
 
                 # set all bars to be the same color

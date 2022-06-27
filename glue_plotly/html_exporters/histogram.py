@@ -52,8 +52,10 @@ class PlotlyHistogram1DExport(Tool):
                 checked_dictionary[layer_state.layer.label] = np.zeros((len(layer_state.layer.components))).astype(bool)
 
         dialog = save_hover.SaveHoverDialog(data_collection=dc_hover, checked_dictionary=checked_dictionary)
-        proceed = warn('Histogram plotly may look different', 'Plotly and Matlotlib binning methods differ and your graph may look different when exported. Do you want to proceed?',
-                    default='Cancel', setting='SHOW_WARN_PROFILE_DUPLICATE')
+        proceed = warn('Histogram plotly may look different', 'Plotly and Matlotlib binning methods differ '
+                                                              'and your graph may look different when exported. '
+                                                              'Do you want to proceed?',
+                       default='Cancel', setting='SHOW_WARN_PROFILE_DUPLICATE')
         if not proceed:
             return
         dialog.exec_()
@@ -134,7 +136,7 @@ class PlotlyHistogram1DExport(Tool):
 
                 # set all bars to be the same color
                 if layer_state.color != '0.35':
-                        marker['color'] = layer_state.color
+                    marker['color'] = layer_state.color
                 else:
                     marker['color'] = 'gray'
 
@@ -150,12 +152,12 @@ class PlotlyHistogram1DExport(Tool):
                 # set log
                 if self.viewer.state.x_log:
                     fig.update_xaxes(type='log', dtick=1, minor_ticks='outside',
-                        range=[np.log10(self.viewer.state.x_min), np.log10(self.viewer.state.x_max)]
-                    )
+                                     range=[np.log10(self.viewer.state.x_min), np.log10(self.viewer.state.x_max)]
+                                     )
                 if self.viewer.state.y_log:
                     fig.update_yaxes(type='log', dtick=1, minor_ticks='outside',
-                        range=[np.log10(self.viewer.state.y_min), np.log10(self.viewer.state.y_max)]
-                    )
+                                     range=[np.log10(self.viewer.state.y_min), np.log10(self.viewer.state.y_max)]
+                                     )
 
                 # set xbins
                 # when the max bin edge is the same as the max x value, plotly excludes this value
@@ -172,8 +174,8 @@ class PlotlyHistogram1DExport(Tool):
                 xbins = dict(
                     start=start_val,
                     end=end_val,
-                    size=(self.viewer.state.hist_x_max - self.viewer.state.hist_x_min) / 
-                        self.viewer.state.hist_n_bin
+                    size=(self.viewer.state.hist_x_max - self.viewer.state.hist_x_min) /
+                    self.viewer.state.hist_n_bin
                 )
 
                 # add hover info to layer
