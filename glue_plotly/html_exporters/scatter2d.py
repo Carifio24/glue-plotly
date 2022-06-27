@@ -1,8 +1,10 @@
 from __future__ import absolute_import, division, print_function
 
+from math import sqrt
+
 import numpy as np
 import matplotlib.colors as colors
-from matplotlib.colors import Normalize
+from matplotlib.colors import Normalize, to_rgba
 
 from qtpy import compat
 from glue.config import viewer_tool, settings
@@ -26,6 +28,21 @@ import plotly.graph_objs as go
 import plotly.figure_factory as ff
 
 DEFAULT_FONT = 'Arial, sans-serif'
+
+
+def weighted_quadratic_mean(x1, x2, w1, w2):
+    return sqrt(w1 * x1**2 + w2 * x2**2)
+
+
+def weighted_color_average(color1, w1, color2):
+    r1, g1, b1, a1 = to_rgba(color1)
+    r2, g2, b2, a2 = to_rgba(color2)
+    w2 = 1 - w1
+    r = weighted_quadratic_mean(r1, r2, w1, w2) * 256
+    g = weighted_quadratic_mean(g1, g2, w1, w2) * 256
+    b = weighted_quadratic_mean(b1, b2, w1, w2) * 256
+    a = weighted_quadratic_mean(a1, a2, w1, w2) * 256
+    return 'rgba({},{},{},{})'.format(r, g, b, a)
 
 
 @viewer_tool
@@ -275,7 +292,8 @@ class PlotlyScatter2DStaticExport(Tool):
                 if layer_state.line_visible:
                     # convert linestyle names from glue values to plotly values
                     ls_dict = {'dotted': 'dot', 'dashed': 'dash'}
-                    line['dash'] = ls_dict.get(layer_state.linestyle, layer_state.linestyle)
+                    linestyle = ls_dict.get(layer_state.linestyle, layer_state.linestyle)
+                    line['dash'] = linestyle
                     line['width'] = layer_state.linewidth
 
                     if layer_state.cmap_mode == 'Fixed':
@@ -284,23 +302,27 @@ class PlotlyScatter2DStaticExport(Tool):
                     else:
                         # set mode to markers and plot the colored line over it
                         mode = 'markers'
-                        lc = plot_colored_line(self.viewer.axes, x, y, rgb_str)
-                        segments = lc.get_segments()
+
                         # generate list of indices to parse colors over
-                        indices = np.repeat(range(len(x)), 2)
-                        indices = indices[1:len(x) * 2 - 1]
-                        for i in range(len(segments)):
-                            fig.add_trace(go.Scatter(
-                                x=[segments[i][0][0], segments[i][1][0]],
-                                y=[segments[i][0][1], segments[i][1][1]],
-                                mode='lines',
-                                line=dict(
-                                    dash=ls_dict[layer_state.linestyle],
-                                    width=layer_state.linewidth,
-                                    color=rgb_str[indices[i]]),
-                                showlegend=False,
-                                hoverinfo='skip')
-                            )
+                        n_divisions = 10
+                        for i in range(len(x)-1):
+                            for n in range(n_divisions):
+                                x1, x2 = x[i:i+2]
+                                y1, y2 = y[i:i+2]
+                                wt = (n-1) / n_divisions
+                                color = weighted_color_average(rgb_str[i], wt, rgb_str[i+1])
+                                print(i, n, rgb_str[i], color)
+                                fig.add_trace(go.Scatter(
+                                    x=[x1, x2],
+                                    y=[y1, y2],
+                                    mode='lines',
+                                    line=dict(
+                                        dash=linestyle,
+                                        width=layer_state.linewidth,
+                                        color=color),
+                                    showlegend=False,
+                                    hoverinfo='skip')
+                                )
                 else:
                     mode = 'markers'
 
