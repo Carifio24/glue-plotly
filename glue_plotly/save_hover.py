@@ -12,7 +12,6 @@ from glue.utils.qt import load_ui
 from glue.core.state_objects import State
 from glue.external.echo import ChoiceSeparator
 from glue.core.data_combo_helper import ComponentIDComboHelper, DataCollectionComboHelper
-from glue.core.qt.dialogs import warn
 
 import numpy as np
 
