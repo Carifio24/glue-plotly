@@ -7,8 +7,9 @@ import numpy as np
 from matplotlib.colors import rgb2hex, to_rgb, Normalize
 
 from qtpy import compat
-from glue.config import viewer_tool, settings
+from qtpy.QtWidgets import QApplication
 
+from glue.config import viewer_tool, settings
 from glue.core import DataCollection, Data
 from glue.core.exceptions import IncompatibleAttribute
 from glue.utils import ensure_numerical
@@ -17,7 +18,7 @@ from glue.viewers.image.composite_array import STRETCHES
 from glue.viewers.image.state import ImageLayerState, ImageSubsetLayerState
 from glue.viewers.scatter.state import ScatterLayerState
 
-from .. import save_hover
+from .. import save_hover, export_dialog
 
 try:
     from glue.viewers.common.qt.tool import Tool
@@ -93,6 +94,12 @@ class PlotlyImage2DExport(Tool):
             dialog.exec_()
 
         filename, _ = compat.getsavefilename(parent=self.viewer, basedir="plot.html")
+
+        dialog = export_dialog.ExportDialog()
+        dialog.show()
+        QApplication.processEvents()
+
+        print("Here!")
 
         width, height = self.viewer.figure.get_size_inches() * self.viewer.figure.dpi
 
@@ -427,7 +434,10 @@ class PlotlyImage2DExport(Tool):
                                   yaxis='y2' if secondary_y else 'y')
             layers_to_add.append([fig.add_heatmap, secondary_info])
 
-        for func, data in layers_to_add:
+        for index, (func, data) in enumerate(layers_to_add):
             func(**data)
 
+        print("About to plot!")
         plot(fig, include_mathjax='cdn', filename=filename, auto_open=False)
+
+        dialog.close()
