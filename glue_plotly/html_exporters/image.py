@@ -7,8 +7,10 @@ import numpy as np
 from matplotlib.colors import rgb2hex, to_rgb, Normalize
 
 from qtpy import compat
-from glue.config import viewer_tool, settings
+from qtpy.QtCore import Qt
+from qtpy.QtWidgets import QProgressDialog
 
+from glue.config import viewer_tool, settings
 from glue.core import DataCollection, Data
 from glue.core.exceptions import IncompatibleAttribute
 from glue.utils import ensure_numerical
@@ -93,6 +95,12 @@ class PlotlyImage2DExport(Tool):
             dialog.exec_()
 
         filename, _ = compat.getsavefilename(parent=self.viewer, basedir="plot.html")
+
+        progress = QProgressDialog("Exporting to Plotly", "Cancel", 0, 100, None)
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.WindowModality.WindowModal)
+        progress.setLabelText("Exporting to Plotly")
+        progress.forceShow()
 
         width, height = self.viewer.figure.get_size_inches() * self.viewer.figure.dpi
 
@@ -427,7 +435,12 @@ class PlotlyImage2DExport(Tool):
                                   yaxis='y2' if secondary_y else 'y')
             layers_to_add.append([fig.add_heatmap, secondary_info])
 
-        for func, data in layers_to_add:
+        n_layers = len(layers_to_add)
+        plot_percentage = 50
+        layers_percentage = 100 - plot_percentage
+        for index, (func, data) in enumerate(layers_to_add):
             func(**data)
+            progress.setValue(int(layers_percentage * (index + 1) / n_layers))
 
         plot(fig, include_mathjax='cdn', filename=filename, auto_open=False)
+        progress.setValue(100)
