@@ -6,6 +6,7 @@ import numpy as np
 from qtpy import compat
 from glue.config import viewer_tool, settings
 from glue.core import Subset
+from glue.utils.qt import messagebox_on_error
 
 try:
     from glue.viewers.common.qt.tool import Tool
@@ -54,8 +55,8 @@ class PlotlyHistogram1DExport(Tool):
     action_text = 'Save Plotly HTML page'
     tool_tip = 'Save Plotly HTML page'
 
+    @messagebox_on_error("An error occurred during the export to Plotly.")
     def activate(self):
-
         filename, _ = compat.getsavefilename(parent=self.viewer, basedir="plot.html")
 
         width, height = self.viewer.figure.get_size_inches() * self.viewer.figure.dpi
