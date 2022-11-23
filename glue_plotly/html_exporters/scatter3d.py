@@ -9,13 +9,14 @@ from glue.config import viewer_tool, settings
 
 from glue.core import DataCollection, Data
 from glue.utils import ensure_numerical
+from glue.utils.qt import messagebox_on_error
 
 try:
     from glue.viewers.common.qt.tool import Tool
 except ImportError:
     from glue.viewers.common.tool import Tool
 
-from glue_plotly import PLOTLY_LOGO
+from glue_plotly import PLOTLY_EXPORT_ERROR_MESSAGE, PLOTLY_LOGO
 from .. import save_hover
 
 from plotly.offline import plot
@@ -33,6 +34,7 @@ class PlotlyScatter3DStaticExport(Tool):
     action_text = 'Save Plotly HTML page'
     tool_tip = 'Save Plotly HTML page'
 
+    @messagebox_on_error(PLOTLY_EXPORT_ERROR_MESSAGE)
     def activate(self):
 
         # grab hover info
