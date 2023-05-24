@@ -3,6 +3,7 @@ import numpy as np
 
 from glue.config import settings
 from glue.core import BaseData
+from glue_plotly.utils import ticks_values
 
 DEFAULT_FONT = 'Arial, sans-serif'
 
@@ -38,7 +39,7 @@ def base_layout_config(viewer, **kwargs):
     return config
 
 
-def rectilinear_axis(viewer, axis):
+def rectilinear_axis(viewer, axis, glue_ticks=True):
     title = getattr(viewer.axes, f'get_{axis}label')()
     ax = getattr(viewer.axes, f'{axis}axis')
     range = [getattr(viewer.state, f'{axis}_min'), getattr(viewer.state, f'{axis}_max')]
@@ -72,6 +73,10 @@ def rectilinear_axis(viewer, axis):
     )
     if log:
         axis_dict.update(dtick=1, minor_ticks='outside')
+    if glue_ticks:
+        vals, text = ticks_values(viewer.axes, axis)
+        if vals and text:
+            axis_dict.update(tickmode='array', tickvals=vals, ticktext=text)
     return axis_dict
 
 
