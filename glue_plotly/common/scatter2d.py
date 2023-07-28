@@ -17,8 +17,8 @@ from .common import DEFAULT_FONT, base_layout_config,\
 LINESTYLES = {'solid': 'solid', 'dotted': 'dot', 'dashed': 'dash', 'dashdot': 'dashdot'}
 
 
-def projection_type(viewer):
-    proj = viewer.state.plot_mode
+def projection_type(viewer_state):
+    proj = viewer_state.plot_mode
     return 'azimuthal equal area' if proj == 'lambert' else proj
 
 
