@@ -3,8 +3,10 @@ from uuid import uuid4
 
 from echo import delay_callback
 from glue.core.command import ApplySubsetState
+from IPython.display import display
 
 import plotly.graph_objects as go
+from traitlets import Instance
 
 from glue_plotly.common.common import base_layout_config
 
@@ -35,11 +37,11 @@ class PlotlyBaseView(IPyWidgetView):
     is2d = True
 
     def __init__(self, session, state=None):
-
         super(PlotlyBaseView, self).__init__(session, state=state)
 
         layout = self._create_layout_config()
         self.figure = go.FigureWidget(layout=layout)
+        print(self.figure.layout.yaxis.scaleanchor)
 
         self.selection_layer_id = uuid4().hex
         selection_layer = go.Image(x0=0.5,
@@ -49,7 +51,7 @@ class PlotlyBaseView(IPyWidgetView):
                                    meta=self.selection_layer_id,
                                    z=[[[0, 0, 0, 0]]],
                                    visible=False)
-        self.figure.add_trace(selection_layer)
+        # self.figure.add_trace(selection_layer)
 
         self.state.add_callback('x_axislabel', self.update_x_axislabel)
         self.state.add_callback('y_axislabel', self.update_y_axislabel)
@@ -68,11 +70,13 @@ class PlotlyBaseView(IPyWidgetView):
 
         self.create_layout()
 
+        print(self.figure.layout.yaxis.scaleanchor)
+
     def _get_selection_layer(self):
         return next(self.figure.select_traces(dict(meta=self.selection_layer_id)))
 
     def _create_layout_config(self):
-        return base_layout_config(self, **self.LAYOUT_SETTINGS, width=1200, height=800)
+        return base_layout_config(self, **self.LAYOUT_SETTINGS)
 
     def _remove_trace_index(self, trace):
         # TODO: It feels like there has to be a better way to do this
@@ -162,3 +166,28 @@ class PlotlyBaseView(IPyWidgetView):
     # TODO: Should we have anything here?
     def redraw(self):
         pass
+
+
+    ### Testing purposes
+
+    def show(self):
+        print(self.figure.layout.yaxis.scaleanchor)
+        super().show()
+        # display(go.FigureWidget())
+        print(self.figure.layout.yaxis.scaleanchor)
+
+    def create_layout(self):
+        self._layout = PlotlyLayout(self.figure_widget)
+
+
+import ipyvuetify as v
+import ipywidgets as widgets
+from traitlets import Unicode
+class PlotlyLayout(v.VuetifyTemplate):
+    template = Unicode('<template><div><jupyter-widget :widget="figure"></jupyter-widget></div></template>').tag(sync=True)
+    figure = Instance(widgets.DOMWidget).tag(sync=True, **widgets.widget_serialization)
+
+    def __init__(self, figure, *args, **kwargs):
+        self.figure = figure
+        super().__init__(*args, **kwargs)
+
