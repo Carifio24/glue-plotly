@@ -177,7 +177,8 @@ class PlotlyBaseView(IPyWidgetView):
         print(self.figure.layout.yaxis.scaleanchor)
 
     def create_layout(self):
-        self._layout = PlotlyLayout(self.figure_widget)
+        super().create_layout()
+        # self._layout = PlotlyLayout(self.figure_widget)
 
 
 import ipyvuetify as v
