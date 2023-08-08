@@ -3,7 +3,8 @@ from uuid import uuid4
 from numpy import repeat
 
 from glue_plotly.common import color_info
-from glue_plotly.common.scatter2d import LINESTYLES, rectilinear_lines, scatter_mode, size_info
+from glue_plotly.common.common import fixed_color
+from glue_plotly.common.scatter2d import LINESTYLES, rectilinear_error_bars, rectilinear_error_info, rectilinear_lines, scatter_mode, size_info
 from glue.core import BaseData
 from glue.utils import ensure_numerical
 from glue.viewers.common.layer_artist import LayerArtist
@@ -49,6 +50,7 @@ DATA_PROPERTIES = {
     "vector_scaling",
 }
 LINE_PROPERTIES = {"line_visible", "cmap_mode", "linestyle", "linewidth", "color"}
+ERROR_PROPERTIES = CMAP_PROPERTIES | {"color", "xerr_att", "yerr_att", "xerr_visible", "yerr_visible"}
 
 
 class PlotlyScatterLayerArtist(LayerArtist):
@@ -81,7 +83,8 @@ class PlotlyScatterLayerArtist(LayerArtist):
         self.view.figure.add_trace(scatter)
 
         self._lines_id = None
-        self._error_id = None
+        self._x_error_id = None
+        self._y_error_id = None
         self._vector_id = None
 
     def remove(self):
@@ -100,8 +103,9 @@ class PlotlyScatterLayerArtist(LayerArtist):
     def _get_lines(self):
         return self._get_traces_with_id(self._lines_id)
 
-    def _get_error_bars(self):
-        return self._get_traces_with_id(self._error_id)
+    def _get_error_bars(self, axis):
+        id = getattr(self, f"_{axis}_error_id")
+        return self._get_traces_with_id(id)
 
     def _get_vectors(self):
         return self._get_traces_with_id(self._vector_id)
@@ -155,6 +159,9 @@ class PlotlyScatterLayerArtist(LayerArtist):
         if force or len(changed & LINE_PROPERTIES) > 0:
             self._update_lines(changed, force=force)
 
+        if force or len(changed & ERROR_PROPERTIES) > 0:
+            self._update_error_bars(changed, force=force)
+
     def _update_lines(self, changed, force=False):
         scatter = self._get_scatter()
         fixed_color = self.state.cmap_mode == 'Fixed'
@@ -169,7 +176,7 @@ class PlotlyScatterLayerArtist(LayerArtist):
                     line, lines = rectilinear_lines(self.state, scatter.marker, scatter.x, scatter.y)
                     if lines:
                         self._lines_id = lines[0].meta
-                    self.view.figure.add_traces(lines)
+                        self.view.figure.add_traces(lines)
 
                     # The newly-created line traces already have the correct properties, so we can return
                     return
@@ -178,10 +185,10 @@ class PlotlyScatterLayerArtist(LayerArtist):
                     line_traces_visible = False
 
             if (force or "line_visible" in changed) or not line_traces_visible:
-                visible = False if not line_traces_visible else self.state.line_visible
+                visible = line_traces_visible and self.state.line_visible
                 self.view.figure.for_each_trace(lambda t: t.update(visible=visible), dict(meta=self._lines_id))
 
-            if force or len(changed & {"linestyle", "linewidth", "color"}) > 0:
+            if force or len(changed & ({"linestyle", "linewidth", "color"} | CMAP_PROPERTIES)) > 0:
                 linestyle = LINESTYLES[self.state.linestyle]
                 if fixed_color:
                     line = scatter.line.update(dash=linestyle, width=self.state.linewidth)
@@ -195,6 +202,59 @@ class PlotlyScatterLayerArtist(LayerArtist):
                         line_data = line.line
                         line_data.update(dash=linestyle, width=self.state.linewidth, color=rgba_strs[indices[i]])
                         line.update(line=line_data)
+
+    def _update_axis_error_bars(self, axis, changed, force=False):
+        scatter = self._get_scatter()
+        bars = self._get_error_bars(axis)
+        fixed = self.state.cmap_mode == 'Fixed'
+        error_key = f"error_{axis}"
+        
+        bars_visible = True
+        if force or "cmap_mode" in changed:
+            if not (fixed or bars):
+                _, bars = rectilinear_error_bars(self.state, scatter.marker, scatter.x, scatter.y, axis)
+                if bars:
+                    setattr(self, f"_{axis}_error_id", bars[0].meta)
+                    self.view.figure.add_traces(bars)
+
+                # The newly-created traces already have the correct properties
+                return
+            
+            elif fixed and bars:
+                error_info = rectilinear_error_info(self.state, axis)
+                scatter.update({error_key: error_info})
+                bars_visible = False
+
+        visibility_attr = f"{axis}err_visible"
+        if (force or visibility_attr in changed) or not bars_visible:
+            visible = bars_visible and getattr(self.state, visibility_attr)
+            if fixed:
+               error = scatter[error_key]
+               error.update(visible=visible)
+               scatter.update({error_key: error})
+            else:
+                meta_id = getattr(self, f"_{axis}_error_id")
+                self.view.figure.for_each_trace(lambda t: t.update(visible=visible), dict(meta=meta_id))
+
+        if force or len(changed & ({"color"} | CMAP_PROPERTIES)) > 0:
+            error_key = f"error_{axis}"
+            if fixed:
+               scatter[error_key].update(color=fixed_color(self.state))
+               scatter.update({error_key: scatter[error_key]})
+            else:
+                rgba_strs = scatter.marker.color
+                for i, bar in enumerate(bars):
+                    bar.update(color=rgba_strs[i]) 
+                    error = bar[error_key]
+                    error.update(color=rgba_strs[i])
+                    bar.update({error_key: error})
+
+    def _update_error_bars(self, changed, force=False):
+        with self.view.figure.batch_update():
+            if self.state.xerr_visible:
+                self._update_axis_error_bars('x', changed, force=force)
+            if self.state.yerr_visible:
+                self._update_axis_error_bars('y', changed, force=force)
 
     def _update_visual_attributes(self, changed, force=False):
 

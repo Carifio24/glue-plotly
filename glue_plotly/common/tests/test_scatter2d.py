@@ -136,8 +136,8 @@ class TestScatter2DRectilinear(TestScatter2D):
         layer_state.xerr_visible = True
         layer_state.yerr_visible = True
         marker = base_marker(layer_state, self.mask)
-        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, 'x')
-        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, 'y')
+        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.x, self.y, 'x', mask=self.mask)
+        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.x, self.y, 'y', mask=self.mask)
 
         mask_size = sum(self.mask)
         assert len(xerr['array']) == mask_size
@@ -160,8 +160,8 @@ class TestScatter2DRectilinear(TestScatter2D):
         layer_state.xerr_visible = True
         layer_state.yerr_visible = True
         marker = base_marker(layer_state, self.mask)
-        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, 'x')
-        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, 'y')
+        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.x, self.y, 'x', mask=self.mask)
+        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.x, self.y, 'y', mask=self.mask)
 
         mask_size = sum(self.mask)
         assert len(xerr['array']) == mask_size

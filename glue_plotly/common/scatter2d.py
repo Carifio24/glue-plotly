@@ -133,13 +133,19 @@ def rectilinear_lines(layer_state, marker, x, y, legend_group=None):
     return line, traces
 
 
-def rectilinear_error_bars(layer_state, marker, mask, x, y, axis, legend_group=None):
-    err = {}
-    traces = []
+def rectilinear_error_info(layer_state, axis, mask=None):
     err_att = getattr(layer_state, f'{axis}err_att')
-    err['type'] = 'data'
-    err['array'] = ensure_numerical(layer_state.layer[err_att][mask].ravel())
-    err['visible'] = True
+    visible = getattr(layer_state, f'{axis}err_visible')
+    values = layer_state.layer[err_att]
+    if mask is not None:
+        values = values[mask]
+    values = ensure_numerical(values.ravel())
+    return dict(type='data', visible=visible, array=values)
+
+
+def rectilinear_error_bars(layer_state, marker, x, y, axis, mask=None, legend_group=None):
+    traces = []
+    err = rectilinear_error_info(layer_state, axis, mask=mask)
 
     # add points with error bars here if color mode is linear
     if layer_state.cmap_mode == 'Linear':
@@ -291,11 +297,11 @@ def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=Tr
 
     if rectilinear:
         if layer_state.xerr_visible:
-            xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, mask, x, y, 'x', legend_group)
+            xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, x, y, 'x', legend_group=legend_group, mask=mask)
             if xerr_traces:
                 traces['xerr'] = xerr_traces
         if layer_state.yerr_visible:
-            yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, mask, x, y, 'y', legend_group)
+            yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, x, y, 'y', legend_group=legend_group, mask=mask)
             if yerr_traces:
                 traces['yerr'] = yerr_traces
 
