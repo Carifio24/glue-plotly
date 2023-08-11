@@ -142,6 +142,7 @@ class PlotlyScatterLayerArtist(LayerArtist):
 
     def _update_display(self, force=False, **kwargs):
         changed = self.pop_changed_properties()
+        print(changed)
 
         if 'layout_update' in kwargs:
             self.view._clear_traces()
@@ -208,26 +209,24 @@ class PlotlyScatterLayerArtist(LayerArtist):
         bars = self._get_error_bars(axis)
         fixed = self.state.cmap_mode == 'Fixed'
         error_key = f"error_{axis}"
-        
-        bars_visible = True
-        if force or "cmap_mode" in changed:
-            if not (fixed or bars):
-                _, bars = rectilinear_error_bars(self.state, scatter.marker, scatter.x, scatter.y, axis)
-                if bars:
-                    setattr(self, f"_{axis}_error_id", bars[0].meta)
-                    self.view.figure.add_traces(bars)
-
-                # The newly-created traces already have the correct properties
-                return
-            
-            elif fixed and bars:
-                error_info = rectilinear_error_info(self.state, axis)
-                scatter.update({error_key: error_info})
-                bars_visible = False
-
         visibility_attr = f"{axis}err_visible"
-        if (force or visibility_attr in changed) or not bars_visible:
-            visible = bars_visible and getattr(self.state, visibility_attr)
+        visible = getattr(self.state, visibility_attr, False)
+
+        need_bar_traces = (not fixed) and visible
+        if force or (need_bar_traces and not bars):
+            _, bars = rectilinear_error_bars(self.state, scatter.marker, scatter.x, scatter.y, axis)
+            if bars:
+                setattr(self, f"_{axis}_error_id", bars[0].meta)
+                self.view.figure.add_traces(bars)
+
+            # The newly-created traces already have the correct properties
+            return
+        
+        elif fixed:
+            error_info = rectilinear_error_info(self.state, axis)
+            scatter.update({error_key: error_info})
+
+        if (force or visibility_attr in changed):
             if fixed:
                error = scatter[error_key]
                error.update(visible=visible)
@@ -270,16 +269,17 @@ class PlotlyScatterLayerArtist(LayerArtist):
                     any(prop in changed for prop in ["color", "fill"]):
 
                 color = color_info(self.state)
+                marker_line = scatter.marker.line
                 if self.state.fill:
+                    marker_line.update(width=0)
                     scatter.marker.update(color=color,
-                                          line=dict(width=0),
+                                          line=marker_line,
                                           opacity=self.state.alpha)
                 else:
+                    marker_line.update(width=1, color=color) 
                     scatter.marker.update(color='rgba(0, 0, 0, 0)',
                                           opacity=self.state.alpha,
-                                          line=dict(width=1,
-                                                    color=color)
-                                          )
+                                          line=marker_line)
 
             if force or any(prop in changed for prop in MARKER_PROPERTIES):
                 scatter.marker['size'] = size_info(self.state)
