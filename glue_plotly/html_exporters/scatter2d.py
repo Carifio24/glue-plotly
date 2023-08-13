@@ -100,4 +100,4 @@ class PlotlyScatter2DStaticExport(Tool):
             for trace in traces:
                 fig.add_trace(trace)
 
-        plot(fig, filename=filename, auto_open=False)
+        plot(fig, include_mathjax='cdn', filename=filename, auto_open=False)
