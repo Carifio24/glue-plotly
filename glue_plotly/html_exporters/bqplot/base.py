@@ -4,7 +4,7 @@ from os.path import exists
 from glue.viewers.common.tool import Tool
 
 import ipyvuetify as v
-from ipywidgets import HBox
+from ipywidgets import HBox, Layout
 from IPython.display import display
 from ipyfilechooser import FileChooser
 
@@ -16,7 +16,9 @@ class PlotlyBaseBqplotExport(Tool):
     action_text = 'Save Plotly HTML page'
     tool_tip = 'Save Plotly HTML page'
 
-    def activate(self):
+    dialog = None
+
+    def make_dialog(self):
         file_chooser = FileChooser(getcwd())
         ok_btn = v.Btn(color='success', disabled=True, children=['Ok'])
         close_btn = v.Btn(color='error', children=['Close'])
@@ -26,8 +28,8 @@ class PlotlyBaseBqplotExport(Tool):
                 v.Card(children=[
                     v.CardTitle(primary_title=True, children=["Select output filepath"]),
                     file_chooser,
-                    HBox(children=[ok_btn, close_btn])
-                ])
+                    HBox(children=[ok_btn, close_btn], layout=Layout(grid_gap='5px', justify_content='flex-end'))
+                ], active_class='p-2')
             ]
         )
 
@@ -45,9 +47,15 @@ class PlotlyBaseBqplotExport(Tool):
         close_btn.on_event('click', on_close_click)
         file_chooser.register_callback(on_selected_change)
 
+        return dialog
+
+    def activate(self):
+        need_dialog = self.dialog is None
         with self.viewer.output_widget:
-            dialog.v_model = True
-            display(dialog)
+            self.dialog = self.dialog or self.make_dialog()
+            self.dialog.v_model = True
+            if need_dialog:
+                display(self.dialog)
 
     def maybe_save_figure(self, filepath):
         if exists(filepath):
