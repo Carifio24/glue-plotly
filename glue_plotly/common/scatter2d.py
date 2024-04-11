@@ -260,6 +260,12 @@ def base_marker(layer_state, mask):
     return marker
 
 
+def rectilinear_density_map(viewer_state, layer_state, marker, x, y):
+    info = dict(x=x, y=y)
+
+    return go.Histogram2d(x=x, y=y)
+
+
 def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=True):
     traces = {}
     if hover_data is None:
