@@ -16,6 +16,19 @@ __all__ = ['PlotlyBaseView']
 INTERACT_COLOR = "#cbcbcb"
 
 
+class GluePlotlyFigureLayout(go.Layout):
+
+    @property
+    def height(self):
+        return super().height
+
+    @height.setter
+    def height(self, value):
+        if isinstance(value, str) and value.endswith("px"):
+            super().height(int(value[:-2]))
+        super().height(value)
+
+
 class PlotlyBaseView(IPyWidgetView):
 
     LAYOUT_SETTINGS = dict(
