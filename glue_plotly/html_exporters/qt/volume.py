@@ -12,6 +12,7 @@ from glue_plotly.common import data_count, layers_to_export
 from glue_plotly.common.base_3d import layout_config
 from glue_plotly.common.scatter3d import traces_for_layer as scatter3d_traces_for_layer
 from glue_plotly.common.volume import traces_for_layer as volume_traces_for_layer
+from glue_plotly.html_exporters.qt.utils import layer_label
 
 from plotly.offline import plot
 import plotly.graph_objs as go
@@ -26,7 +27,6 @@ class PlotlyVolumeStaticExport(Tool):
 
     @messagebox_on_error(PLOTLY_ERROR_MESSAGE)
     def _export_to_plotly(self, filename, state_dictionary):
-
         config = layout_config(self.viewer.state)
         layout = go.Layout(**config)
         fig = go.Figure(layout=layout)
@@ -39,7 +39,7 @@ class PlotlyVolumeStaticExport(Tool):
                 traces = scatter3d_traces_for_layer(self.viewer.state, layer.state,
                                                     add_data_label=add_data_label)
             else:
-                options = state_dictionary[layer.layer.label]
+                options = state_dictionary[layer_label(layer)]
                 count = int(options.isosurface_count)
                 traces = volume_traces_for_layer(self.viewer.state, layer.state, bounds,
                                                  isosurface_count=count,
