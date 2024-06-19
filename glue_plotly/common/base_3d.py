@@ -82,9 +82,9 @@ def plotly_up_from_vispy(vispy_up):
     return up
 
 
-def layout_config(viewer_state):
+def layout_config(viewer_state, **kwargs):
     width, height, depth = dimensions(viewer_state)
-    return dict(
+    config = dict(
         margin=dict(r=50, l=50, b=50, t=50),  # noqa
         width=1200,
         paper_bgcolor=settings.BACKGROUND_COLOR,
@@ -105,3 +105,5 @@ def layout_config(viewer_state):
             aspectmode='manual'
         )
     )
+    config.update(kwargs)
+    return config
