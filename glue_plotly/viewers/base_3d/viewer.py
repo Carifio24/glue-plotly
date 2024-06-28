@@ -11,7 +11,7 @@ class PlotlyBase3dView(PlotlyBaseView):
         super(PlotlyBase3dView, self).__init__(session, state=state)
 
     def _create_layout_config(self):
-        return layout_config(**self.LAYOUT_SETTINGS, width=1200, height=800)
+        return layout_config(self.state, **self.LAYOUT_SETTINGS, width=1200, height=800)
 
     @property
     def axis_z(self):

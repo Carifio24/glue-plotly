@@ -96,8 +96,7 @@ def layout_config(viewer_state, **kwargs):
                 projection=dict(
                     type=projection_type(viewer_state)
                 ),
-                # Currently there's no way to change this in glue
-                up=plotly_up_from_vispy("+z")
+                up=plotly_up_from_vispy("+z")  # Currently there's no way to change this in glue
             ),
             aspectratio=dict(x=1 * viewer_state.x_stretch,
                              y=height / width * viewer_state.y_stretch,

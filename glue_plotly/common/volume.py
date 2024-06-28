@@ -1,5 +1,6 @@
 from glue_plotly.utils import rgba_components
 from numpy import linspace, meshgrid, nan_to_num, nanmin
+from uuid import uuid4
 
 from glue.core import BaseData
 from glue.core.state_objects import State
@@ -115,5 +116,6 @@ def traces_for_layer(viewer_state, layer_state, bounds,
        isomax=isomax_for_layer(viewer_state, layer_state),
        opacity=layer_state.alpha,
        surface_count=isosurface_count,
-       showscale=False
+       showscale=False,
+       meta=uuid4().hex,
     )]
