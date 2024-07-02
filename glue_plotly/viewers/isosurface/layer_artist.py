@@ -28,15 +28,20 @@ class PlotlyIsosurfaceLayerArtist(LayerArtist):
         
 
     def _create_surface(self):
+        # TODO: Use 256 as the resolution for now
+        resolution = 128
         bounds = [
-            (self._viewer_state.z_min, self._viewer_state.z_max),
-            (self._viewer_state.y_min, self._viewer_state.y_max),
-            (self._viewer_state.x_min, self._viewer_state.x_max)
+            (self._viewer_state.z_min, self._viewer_state.z_max, resolution),
+            (self._viewer_state.y_min, self._viewer_state.y_max, resolution),
+            (self._viewer_state.x_min, self._viewer_state.x_max, resolution)
         ]
+        # isosurface_count = int(self.state.level_high - self.state.level_low)
+        isosurface_count = 5
         traces = traces_for_layer(self._viewer_state,
                                   self.state,
                                   bounds=bounds,
-                                  isosurface_count=self.state.isosurface_count,
+                                  isosurface_count=isosurface_count,
+                                  reference_data=self.layer,
                                   add_data_label=True)
         return traces[0]
 

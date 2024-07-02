@@ -37,6 +37,7 @@ class PlotlyBaseView(IPyWidgetView):
         super(PlotlyBaseView, self).__init__(session, state=state)
 
         layout = self._create_layout_config()
+        print(layout)
         self.figure = go.FigureWidget(layout=layout)
 
         self.selection_layer_id = uuid4().hex

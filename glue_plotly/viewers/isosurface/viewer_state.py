@@ -1,5 +1,6 @@
-from ..base_3d.viewer_state import PlotlyBase3dViewerState
+from echo import CallbackProperty
+from ..base_3d.viewer_state import Plotly3dViewerState
 
 
-class PlotlyIsosurfaceViewerState(PlotlyBase3dViewerState):
-    pass
+class PlotlyIsosurfaceViewerState(Plotly3dViewerState):
+    pass 

@@ -26,7 +26,10 @@ def parent_layer(viewer_or_state, subset):
     return None
 
 
-def values(viewer_state, layer_state, bounds, precomputed=None):
+def values(viewer_state, layer_state, bounds,
+           precomputed=None,
+           reference_data=None):
+    reference_data = reference_data or viewer_state.reference_data
     subset_layer = isinstance(layer_state.layer, GroupedSubset)
     parent = layer_state.layer.data if subset_layer else layer_state.layer
     parent_label = parent.label
@@ -34,14 +37,14 @@ def values(viewer_state, layer_state, bounds, precomputed=None):
         data = precomputed[parent_label]
     else:
         data = parent.compute_fixed_resolution_buffer(
-                   target_data=viewer_state.reference_data,
+                   target_data=reference_data,
                    bounds=bounds,
                    target_cid=layer_state.attribute
                )
 
     if subset_layer:
         subcube = parent.compute_fixed_resolution_buffer(
-            target_data=viewer_state.reference_data,
+            target_data=reference_data,
             bounds=bounds,
             subset_state=layer_state.layer.subset_state
         )
@@ -69,15 +72,29 @@ def opacity_scale(layer_state):
     return [[0, 0], [1, 1]]
 
 
+def vmin_for_state(state):
+    vmin = getattr(state, 'vmin', None)
+    if vmin is None:
+        vmin = getattr(state, 'level_low', None)
+    return vmin
+
+
+def vmax_for_state(state):
+    vmax = getattr(state, 'vmax', None)
+    if vmax is None:
+        vmax = getattr(state, 'level_high', None)
+    return vmax
+
+
 def isomin_for_layer(viewer_or_state, layer):
     if isinstance(layer.layer, GroupedSubset):
         parent = parent_layer(viewer_or_state, layer.layer)
         if parent is not None:
             parent_state = parent if isinstance(parent, State) else parent.state
-            return parent_state.vmin
+            return vmin_for_state(parent_state)
 
     state = layer if isinstance(layer, State) else layer
-    return state.vmin
+    return vmin_for_state(state)
 
 
 def isomax_for_layer(viewer_or_state, layer):
@@ -85,19 +102,22 @@ def isomax_for_layer(viewer_or_state, layer):
         parent = parent_layer(viewer_or_state, layer.layer)
         if parent is not None:
             parent_state = parent if isinstance(parent, State) else parent.state
-            return parent_state.vmax
+            return vmax_for_state(parent_state)
 
     state = layer if isinstance(layer, State) else layer
-    return state.vmax
+    return vmax_for_state(state)
 
 
 def traces_for_layer(viewer_state, layer_state, bounds,
-                     isosurface_count=5, add_data_label=True):
+                     isosurface_count=5,
+                     reference_data=None,
+                     add_data_label=True):
 
     xyz = positions(bounds)
     mask = bbox_mask(viewer_state, *xyz)
     clipped_xyz = [c[mask] for c in xyz]
-    clipped_values = values(viewer_state, layer_state, bounds)[mask]
+    reference_data = reference_data or viewer_state.reference_data
+    clipped_values = values(viewer_state, layer_state, bounds, reference_data=reference_data)[mask]
     name = layer_state.layer.label
     if add_data_label and not isinstance(layer_state.layer, BaseData):
         name += " ({0})".format(layer_state.layer.data.label)

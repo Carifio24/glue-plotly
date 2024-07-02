@@ -25,8 +25,9 @@ def projection_type(viewer_state):
 
 
 def axis(viewer_state, ax):
-    title = getattr(viewer_state, f'{ax}_att').label
-    range = [getattr(viewer_state, f'{ax}_min'), getattr(viewer_state, f'{ax}_max')]
+    att = getattr(viewer_state, f'{ax}_att', None)
+    title = att.label if att else None
+    range = [getattr(viewer_state, f'{ax}_min', 0), getattr(viewer_state, f'{ax}_max', 1)]
     return dict(
         title=title,
         titlefont=dict(
@@ -82,8 +83,8 @@ def plotly_up_from_vispy(vispy_up):
     return up
 
 
-def layout_config(viewer_state, **kwargs):
-    width, height, depth = dimensions(viewer_state)
+def layout_config(viewer_state, include_dimensions=True, **kwargs):
+    width, height, depth = dimensions(viewer_state) if include_dimensions else (1200, 1200, 1200)
     config = dict(
         margin=dict(r=50, l=50, b=50, t=50),  # noqa
         width=1200,
@@ -98,9 +99,9 @@ def layout_config(viewer_state, **kwargs):
                 ),
                 up=plotly_up_from_vispy("+z")  # Currently there's no way to change this in glue
             ),
-            aspectratio=dict(x=1 * viewer_state.x_stretch,
-                             y=height / width * viewer_state.y_stretch,
-                             z=depth / width * viewer_state.z_stretch),
+            aspectratio=dict(x=1 * getattr(viewer_state, 'x_stretch', 1),
+                             y=height / width * getattr(viewer_state, 'y_stretch', 1),
+                             z=depth / width * getattr(viewer_state, 'z_stretch', 1)),
             aspectmode='manual'
         )
     )
