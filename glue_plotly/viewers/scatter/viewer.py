@@ -11,9 +11,17 @@ from glue_jupyter.registries import viewer_registry
 
 from .layer_artist import PlotlyScatterLayerArtist
 from glue_plotly.viewers import PlotlyBaseView
+from glue_plotly.viewers.common import BasePlotlyViewerState
 
 
 __all__ = ["PlotlyScatterView"]
+
+
+class PlotlyScatterViewerState(ScatterViewerState, BasePlotlyViewerState):
+
+    def __init__(self, *args, **kwargs):
+        ScatterViewerState.__init__(*args, **kwargs)
+        PlotlyBaseView.__init__(*args, **kwargs)
 
 
 @viewer_registry("plotly_scatter")
@@ -29,7 +37,7 @@ class PlotlyScatterView(PlotlyBaseView):
     allow_duplicate_subset = False
     large_data_size = 1e7
 
-    _state_cls = ScatterViewerState
+    _state_cls = PlotlyScatterViewerState 
     _options_cls = ScatterViewerStateWidget
     _data_artist_cls = PlotlyScatterLayerArtist
     _subset_artist_cls = PlotlyScatterLayerArtist
