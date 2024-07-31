@@ -141,6 +141,20 @@ def export_profile(viewer):
     return traces, xaxis, yaxis
 
 
+def can_export_viewer(viewer):
+    return hasattr(viewer, '__plotly__') or type(viewer) in DISPATCH
+
+
+def export_data(viewer):
+    if hasattr(viewer, '__plotly__'):
+        return viewer.__plotly__()
+    elif type(viewer) in DISPATCH:
+        return DISPATCH[type(viewer)](viewer)
+    else:
+        raise ValueError("Plotly export not supported for "
+                         "viewer type: %s" % type(viewer))
+
+
 def build_plotly_call(app):
     args = []
     layout = {'showlegend': True, 'barmode': 'overlay', 'bargap': 0,
@@ -148,12 +162,9 @@ def build_plotly_call(app):
 
     ct = 1
     for tab in app.viewers:
-        for viewer in tab:
-            if hasattr(viewer, '__plotly__'):
-                p, xaxis, yaxis = viewer.__plotly__()
-            else:
-                assert type(viewer) in DISPATCH
-                p, xaxis, yaxis = DISPATCH[type(viewer)](viewer)
+        for viewer in filter(can_export_viewer, tab):
+            
+            p, xaxis, yaxis = export_data(viewer)
 
             xaxis['zeroline'] = False
             yaxis['zeroline'] = False
@@ -184,20 +195,11 @@ def can_save_plotly(application):
         raise ValueError("Plotly Export requires the plotly python library. "
                          "Please install first")
 
-    for tab in application.viewers:
-        for viewer in tab:
-            if hasattr(viewer, '__plotly__'):
-                continue
-
-            if not isinstance(viewer, tuple(DISPATCH)):
-                raise ValueError("Plotly Export cannot handle viewer: %s"
-                                 % type(viewer))
-
     if len(application.viewers) != 1:
         raise ValueError("Plotly Export only supports a single tab. "
                          "Please close other tabs to export")
 
-    nplot = sum(len(t) for t in application.viewers)
+    nplot = sum(sum(viewer for viewer in filter(can_export_viewer, tab)) for tab in application.viewers)
     if nplot == 0:
         raise ValueError("Plotly Export requires at least one plot")
 
