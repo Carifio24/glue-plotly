@@ -46,7 +46,12 @@ def base_layout_config(viewer, include_dimensions=True, **kwargs):
     config = dict(
         margin=dict(r=50, l=50, b=50, t=50),  # noqa
         paper_bgcolor=settings.BACKGROUND_COLOR,
-        plot_bgcolor=settings.BACKGROUND_COLOR
+        plot_bgcolor=settings.BACKGROUND_COLOR,
+        legend=dict(
+            font=dict(
+                color=settings.FOREGROUND_COLOR,
+            )
+        )
     )
 
     if include_dimensions:
