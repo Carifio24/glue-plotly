@@ -1,6 +1,7 @@
 
 import json
 from importlib.metadata import version
+from pathlib import Path
 from unittest import mock
 from unittest.mock import patch
 
@@ -22,9 +23,8 @@ except ImportError:
     DendrogramViewer = None
 
 from glue_plotly.web.export_plotly import build_plotly_call
-
-from ....web.qt import setup
-from ..exporter import QtPlotlyExporter
+from glue_plotly.web.qt import setup
+from glue_plotly.web.qt.exporter import QtPlotlyExporter
 
 plotly_sign_in = mock.MagicMock()
 plotly_plot = mock.MagicMock()
@@ -57,7 +57,7 @@ def make_credentials_file(path, username="", api_key=""):
     credentials["proxy_username"] = ""
     credentials["proxy_password"] = ""
     credentials["stream_ids"] = []
-    with open(path, "w") as f:
+    with Path(path).open("w") as f:
         json.dump(credentials, f, sort_keys=True)
     plotly.files.FILE_CONTENT[path] = credentials
 
@@ -88,7 +88,9 @@ class TestQtPlotlyExporter:
 
         # Workaround until for the issue solved in https://github.com/glue-viz/glue-qt/pull/19
         if (NUMPY_LT_2 or GLUE_QT_GE_031) and DendrogramViewer is not None:
-            dendro_data = Data(label="dendrogram", parent=[-1, 0, 1, 1], height=[1.3, 2.2, 3.2, 4.4])
+            dendro_data = Data(label="dendrogram",
+                               parent=[-1, 0, 1, 1],
+                               height=[1.3, 2.2, 3.2, 4.4])
             dc.append(dendro_data)
             dv = self.app.new_data_viewer(DendrogramViewer, data=dendro_data)
             dv.state.height_att = dendro_data.id["height"]
@@ -109,7 +111,8 @@ class TestQtPlotlyExporter:
 
         make_credentials_file(credentials_file)
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file):
 
             exporter = self.get_exporter()
 
@@ -122,9 +125,12 @@ class TestQtPlotlyExporter:
 
         credentials_file = tmpdir.join(".credentials").strpath
 
-        make_credentials_file(credentials_file, username="batman", api_key="batmobile")
+        make_credentials_file(credentials_file,
+                              username="batman",
+                              api_key="batmobile")
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file):
 
             exporter = self.get_exporter()
 
@@ -136,9 +142,12 @@ class TestQtPlotlyExporter:
 
         credentials_file = tmpdir.join(".credentials").strpath
 
-        make_credentials_file(credentials_file, username="batman", api_key="batmobile")
+        make_credentials_file(credentials_file,
+                              username="batman",
+                              api_key="batmobile")
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file):
 
             exporter = self.get_exporter()
 
@@ -157,13 +166,13 @@ class TestQtPlotlyExporter:
 
         make_credentials_file(credentials_file, username="batman", api_key="batmobile")
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
-            with patch("chart_studio.plotly.plot", mock.MagicMock()):
-                with patch("chart_studio.plotly.sign_in", mock.MagicMock()):
-                    with patch("webbrowser.open_new_tab"):
-                        exporter = self.get_exporter()
-                        exporter.accept()
-                        assert exporter.text_status.text() == "Exporting succeeded"
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file), \
+             patch("chart_studio.plotly.plot", mock.MagicMock()), \
+             patch("chart_studio.plotly.sign_in", mock.MagicMock()), \
+             patch("webbrowser.open_new_tab"):
+                 exporter = self.get_exporter()
+                 exporter.accept()
+                 assert exporter.text_status.text() == "Exporting succeeded"
 
     ERRORS = [
         (PlotlyError(SIGN_IN_ERROR), "Authentication failed"),
@@ -177,36 +186,42 @@ class TestQtPlotlyExporter:
 
         credentials_file = tmpdir.join(".credentials").strpath
 
-        make_credentials_file(credentials_file, username="batman", api_key="batmobile")
+        make_credentials_file(credentials_file,
+                              username="batman",
+                              api_key="batmobile")
 
         plot = mock.MagicMock(side_effect=error)
 
         sign_in = mock.MagicMock()
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
-            with patch("chart_studio.plotly.sign_in", sign_in):
-                with patch("chart_studio.plotly.plot", plot):
-                    with patch("webbrowser.open_new_tab"):
-                        exporter = self.get_exporter()
-                        exporter.accept()
-                        assert exporter.text_status.text() == status
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file), \
+             patch("chart_studio.plotly.sign_in", sign_in), \
+             patch("chart_studio.plotly.plot", plot), \
+             patch("webbrowser.open_new_tab"):
+            exporter = self.get_exporter()
+            exporter.accept()
+            assert exporter.text_status.text() == status
 
     def test_fix_url(self, tmpdir):
 
         credentials_file = tmpdir.join(".credentials").strpath
 
-        make_credentials_file(credentials_file, username="batman", api_key="batmobile")
+        make_credentials_file(credentials_file,
+                              username="batman",
+                              api_key="batmobile")
 
         plot = mock.MagicMock(return_value="https://chart-studio.plotly.com/"
                                            "~batman/6/?share_key=rbkWvJQn6cyj3HMMGROiqI#/")
 
         sign_in = mock.MagicMock()
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file):
-            with patch("chart_studio.plotly.sign_in", sign_in):
-                with patch("chart_studio.plotly.plot", plot):
-                    with patch("webbrowser.open_new_tab") as open_new_tab:
-                        exporter = self.get_exporter()
-                        exporter.accept()
-                        open_new_tab.assert_called_once_with(
-                            "https://chart-studio.plotly.com/~batman/6/?share_key=rbkWvJQn6cyj3HMMGROiqI#/")
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file), \
+             patch("chart_studio.plotly.sign_in", sign_in), \
+             patch("chart_studio.plotly.plot", plot), \
+             patch("webbrowser.open_new_tab") as open_new_tab:
+            exporter = self.get_exporter()
+            exporter.accept()
+            open_new_tab.assert_called_once_with(
+                "https://chart-studio.plotly.com/~batman/6/?share_key=rbkWvJQn6cyj3HMMGROiqI#/")

@@ -1,8 +1,6 @@
 
 import logging
 import os
-import sys
-import traceback
 import webbrowser
 
 from glue_qt.utils import load_ui, process_events
@@ -75,12 +73,15 @@ class QtPlotlyExporter(QtWidgets.QDialog):
         from chart_studio import plotly
 
         credentials = plotly.get_credentials()
-        config_available = credentials["username"] != "" and credentials["api_key"] != ""
+        config_available = credentials["username"] != "" and \
+                           credentials["api_key"] != ""
 
         if config_available:
             self.ui.radio_account_config.setChecked(True)
             label = self.ui.radio_account_config.text()
-            self.ui.radio_account_config.setText(label + " (username: {0})".format(credentials["username"]))
+            self.ui.radio_account_config.setText(
+                label + " (username: {})".format(credentials["username"])
+            )
         else:
             self.ui.radio_account_manual.setChecked(True)
 
@@ -98,6 +99,8 @@ class QtPlotlyExporter(QtWidgets.QDialog):
 
         # In future we might be able to use more fine-grained exceptions
         # https://github.com/plotly/plotly.py/issues/524
+
+        logger = logging.getLogger(__name__)
 
         self.set_status("Signing in and plotting...", color="blue")
 
@@ -143,25 +146,21 @@ class QtPlotlyExporter(QtWidgets.QDialog):
             plotly.sign_in(auth["username"], auth["api_key"])
             plotly_url = plotly.plot(*self.plotly_args, **self.plotly_kwargs)
         except PlotlyError as exc:
-            print("Plotly exception:")
-            print("-" * 60)
-            traceback.print_exc(file=sys.stdout)
-            print("-" * 60)
+            logger.exception("Plotly exception:")
             if ("the supplied API key doesn't match our records" in exc.args[0] or
                     "Sign in failed" in exc.args[0]):
                 self.set_status("Authentication failed", color="red")
             elif "filled its quota of private files" in exc.args[0]:
                 self.set_status("Maximum number of private plots reached", color="red")
             elif "Accounts on the Community Plan cannot save private files" in exc.args[0]:
-                self.set_status("Accounts on the Community Plan cannot save private files", color="red")
+                self.set_status(
+                        "Accounts on the Community Plan cannot save private files",
+                        color="red")
             else:
                 self.set_status("An unexpected error occurred", color="red")
             return
         except Exception:
-            print("Plotly exception:")
-            print("-" * 60)
-            traceback.print_exc(file=sys.stdout)
-            print("-" * 60)
+            logger.exception("Plotly exception:")
             self.set_status("An unexpected error occurred", color="red")
             return
 
@@ -171,13 +170,11 @@ class QtPlotlyExporter(QtWidgets.QDialog):
             try:
                 set_credentials_file(**auth)
             except Exception:
-                print("Plotly exception:")
-                print("-" * 60)
-                traceback.print_exc(file=sys.stdout)
-                print("-" * 60)
-                self.set_status("Exporting succeeded (but saving login failed)", color="blue")
+                logger.exception("Plotly exception:")
+                self.set_status("Exporting succeeded (but saving login failed)",
+                                color="blue")
 
-        print(f"Plotly URL: {plotly_url}")
+        logger.info(f"Plotly URL: {plotly_url}")
 
         webbrowser.open_new_tab(plotly_url)
 

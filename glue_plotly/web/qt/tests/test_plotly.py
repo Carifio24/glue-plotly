@@ -12,13 +12,16 @@ from glue_qt.viewers.histogram import HistogramViewer  # noqa: E402
 from glue_qt.viewers.profile import ProfileViewer  # noqa: E402
 from glue_qt.viewers.scatter import ScatterViewer  # noqa: E402
 
-from ....common.tests.utils import SimpleCoordinates, check_axes_agree  # noqa: E402
-from ...export_plotly import build_plotly_call  # noqa: E402
+from glue_plotly.common.tests.utils import (  # noqa: E402
+    SimpleCoordinates,
+    check_axes_agree,
+)
+from glue_plotly.web.export_plotly import build_plotly_call  # noqa: E402
 
 
 class TestPlotly:
 
-    def setup_method(self, method):
+    def setup_method(self, _method):
         d = Data(x=[1, 2, 3], y=[2, 3, 4], z=["a", "b", "c"], label="data")
         pd = Data(label="profile", w=np.arange(24).reshape((3, 4, 2)).astype(float))
         pd.coords = SimpleCoordinates()
@@ -27,7 +30,7 @@ class TestPlotly:
         self.data = d
         self.profile_data = pd
 
-    def teardown_method(self, method):
+    def teardown_method(self, _method):
         self.app.close()
         self.app = None
 
@@ -133,8 +136,8 @@ class TestPlotly:
         )
         data = args[0]["data"]
         trace_data = data[0].to_plotly_json()
-        for k in expected:
-            assert expected[k] == trace_data[k]
+        for key, data in expected:
+            assert data == trace_data[key]
 
         layout = args[0]["layout"]
         assert layout["barmode"] == "overlay"
@@ -165,8 +168,8 @@ class TestPlotly:
         )
         data = args[0]["data"]
         trace_data = data[0].to_plotly_json()
-        for k in expected:
-            assert expected[k] == trace_data[k]
+        for key, data in expected:
+            assert data == trace_data[key]
 
         layout = args[0]["layout"]
         assert layout["barmode"] == "overlay"
