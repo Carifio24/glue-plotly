@@ -32,9 +32,11 @@ class VolumeOptionsDialog(QDialog):
         super(VolumeOptionsDialog, self).__init__(parent=parent)
 
         self.viewer = viewer
-        layers = [layer for layer in self.viewer.layers if layer.enabled and layer.state.visible]
+        layers = [layer for layer in self.viewer.layers
+                  if layer.enabled and layer.state.visible]
         self.state = VolumeDialogState(layers)
-        self.ui = load_ui("volume_options.ui", self, directory=os.path.dirname(__file__))
+        self.ui = load_ui("volume_options.ui", self,
+                          directory=os.path.dirname(__file__))
         self._connections = autoconnect_callbacks_to_qt(self.state, self.ui)
 
         self.state_dictionary = {
@@ -56,4 +58,6 @@ class VolumeOptionsDialog(QDialog):
         return None
 
     def _on_layer_change(self, layer):
-        self._layer_connections = update_layout_for_state(self.ui.layer_layout, self.state_dictionary.get(layer, None))
+        self._layer_connections = update_layout_for_state(
+                                      self.ui.layer_layout,
+                                      self.state_dictionary.get(layer, None))

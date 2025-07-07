@@ -29,8 +29,6 @@ def save_plotly(application):
 
     logging.getLogger(__name__).debug(args, kwargs)
 
-    # TODO: check what current GUI framework is
-
     exporter = QtPlotlyExporter(plotly_args=args, plotly_kwargs=kwargs)
     exporter.exec_()
 
@@ -43,12 +41,12 @@ class QtPlotlyExporter(QtWidgets.QDialog):
     title = TextProperty("text_title")
     legend = ButtonProperty("checkbox_legend")
 
-    def __init__(self, plotly_args=[], plotly_kwargs={}, parent=None):
+    def __init__(self, plotly_args=None, plotly_kwargs=None, parent=None):
 
-        super(QtPlotlyExporter, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
-        self.plotly_args = plotly_args
-        self.plotly_kwargs = plotly_kwargs
+        self.plotly_args = plotly_args if plotly_args is not None else []
+        self.plotly_kwargs = plotly_kwargs if plotly_kwargs is not None else {}
 
         self.ui = load_ui("exporter.ui", self,
                           directory=os.path.dirname(__file__))
