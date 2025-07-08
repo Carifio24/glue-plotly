@@ -50,7 +50,7 @@ class PlotlyScatterView(PlotlyBaseView):
         # For now, that means polar
         return polar_layout_config(self, radial_axis, **self.LAYOUT_SETTINGS)
 
-    def _update_projection(self, *args):
+    def _update_projection(self, *_args):
         config = self._create_layout_config()
         traces = self.figure.data
         layout = Layout(**config)
@@ -59,15 +59,18 @@ class PlotlyScatterView(PlotlyBaseView):
         # For some reason doing these updates in the layout config
         # doesn't seem to get rid of pre-existing axes
         if self.state.using_rectilinear:
-            self.figure.update_layout(polar=None, xaxis=dict(visible=True), yaxis=dict(visible=True))
+            self.figure.update_layout(polar=None,
+                                      xaxis=dict(visible=True),
+                                      yaxis=dict(visible=True))
         else:
-            self.figure.update_layout(xaxis=dict(visible=False), yaxis=dict(visible=False))
+            self.figure.update_layout(xaxis=dict(visible=False),
+                                      yaxis=dict(visible=False))
         self.figure.data = traces
         for layer in self.layers:
             layer.update(layout_update=True)
         self.figure.update()
 
-    def _update_axes(self, *args):
+    def _update_axes(self, *_args):
         if self.state.x_att is not None:
             self.state.x_axislabel = str(self.state.x_att)
 

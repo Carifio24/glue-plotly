@@ -78,7 +78,8 @@ class TestPlotly:
         data = args[0]["data"]
 
         # check that subset is on Top
-        assert len(data) == 2
+        layer_count = 2
+        assert len(data) == layer_count
         assert data[0]["name"] == "data"
         assert data[1]["name"] == "subset"
 

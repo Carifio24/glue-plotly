@@ -240,7 +240,9 @@ class PlotlyScatterLayerArtist(LayerArtist):
                     indices = indices[1:count * 2 - 1]
                     for i, line in enumerate(lines):
                         line_data = line.line
-                        line_data.update(dash=linestyle, width=self.state.linewidth, color=rgba_strs[indices[i]])
+                        line_data.update(dash=linestyle,
+                                         width=self.state.linewidth,
+                                         color=rgba_strs[indices[i]])
                         line.update(line=line_data)
 
     def _update_visual_attributes(self, changed, force=False):
@@ -260,7 +262,9 @@ class PlotlyScatterLayerArtist(LayerArtist):
                 layer_color = color_info(self.state)
                 marker_color = layer_color if self.state.fill else "rgba(0, 0, 0, 0)"
                 if self.state.border_visible:
-                    border_color = layer_color if self.state.border_color_match_layer else self.state.border_color
+                    border_color = layer_color \
+                                    if self.state.border_color_match_layer \
+                                    else self.state.border_color
                     line = dict(width=self.state.border_size, color=border_color)
                 else:
                     line = dict(width=0)

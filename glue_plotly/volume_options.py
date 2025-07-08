@@ -14,11 +14,19 @@ __all__ = ["VolumeOptionsDialog"]
 
 
 class VolumeDialogState(State):
+    """
+    State class representing options for a Plotly volume export from glue.
+
+    Attributes
+    ----------
+        layer (glue.core.layer.LayerArtist): The currently selected layer
+        layers (List[glue.core.layer.LayerArtist]): The list of layers to be exported
+    """
 
     layer = SelectionCallbackProperty()
 
     def __init__(self, layers):
-        super(VolumeDialogState, self).__init__()
+        super().__init__()
 
         self.layers = layers
         self.layer_helper = ComboHelper(self, "layer")
@@ -26,10 +34,11 @@ class VolumeDialogState(State):
 
 
 class VolumeOptionsDialog(QDialog):
+    """Dialog providing a GUI for selecting options for a Plotly volume export from glue."""
 
     def __init__(self, parent=None, viewer=None):
 
-        super(VolumeOptionsDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.viewer = viewer
         layers = [layer for layer in self.viewer.layers

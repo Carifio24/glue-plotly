@@ -50,7 +50,7 @@ class PlotlyHistogramView(PlotlyBaseView):
         config.update(xaxis=x_axis, yaxis=y_axis)
         return config
 
-    def _update_axes(self, *args):
+    def _update_axes(self, *_args):
         if self.state.x_att is not None:
             self.state.x_axislabel = str(self.state.x_att)
 

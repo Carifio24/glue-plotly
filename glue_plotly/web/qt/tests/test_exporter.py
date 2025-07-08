@@ -166,7 +166,8 @@ class TestQtPlotlyExporter:
 
         make_credentials_file(credentials_file, username="batman", api_key="batmobile")
 
-        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE", credentials_file), \
+        with patch("chart_studio.plotly.plotly.tools.CREDENTIALS_FILE",
+                   credentials_file), \
              patch("chart_studio.plotly.plot", mock.MagicMock()), \
              patch("chart_studio.plotly.sign_in", mock.MagicMock()), \
              patch("webbrowser.open_new_tab"):
