@@ -1,7 +1,7 @@
-/home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/traittypes/traittypes.py:20: DeprecationWarning: 
+/home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/traittypes/traittypes.py:20: DeprecationWarning:
             Sentinel is not a public part of the traitlets API.
             It was published by mistake, and may be removed in the future.
-            
+
   Empty = Sentinel('Empty', 'traittypes',
 /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/bqplot/plotting_widgets.py:30: DeprecationWarning: metadata {'dtype': None} was set from the constructor. With traitlets 4.1, metadata should be set using the .tag() method, e.g., Int().tag(key1='value1', key2='value2')
   data = DataFrame()
@@ -98,39 +98,39 @@ LayoutWidget(controls={'toolbar_selection_tools': BasicJupyterToolbar(template=T
 =============================== warnings summary ===============================
 ../../../__init__.py:3
   /home/jon/dev/glue-plotly/glue-plotly/glue_plotly/__init__.py:3: DeprecationWarning:
-  
+
   pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
 
 ../../../../../../../opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/pkg_resources/__init__.py:2871
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/pkg_resources/__init__.py:2871: DeprecationWarning:
-  
+
   Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
   Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
 
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/glue/viewers/common/qt/__init__.py:3: GlueDeprecationWarning:
-  
+
   Importing from glue.viewers.common.qt is deprecated, use glue_qt.viewers.common instead
 
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/glue/viewers/common/qt/data_viewer_with_state.py:3: GlueDeprecationWarning:
-  
+
   Importing from glue.viewers.common.qt.data_viewer_with_state is deprecated, use glue_qt.viewers.common.data_viewer_with_state instead
 
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/glue/utils/qt/__init__.py:3: GlueDeprecationWarning:
-  
+
   Importing from glue.utils.qt is deprecated, use glue_qt.utils instead
 
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/glue/viewers/common/qt/toolbar.py:3: GlueDeprecationWarning:
-  
+
   Importing from glue.viewers.common.qt.toolbar is deprecated, use glue_qt.viewers.common.toolbar instead
 
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
 glue_plotly/viewers/scatter/tests/test_viewer.py::TestScatterView::test_basic
   /home/jon/opt/mambaforge/envs/glue-plotly/lib/python3.11/site-packages/glue_vispy_viewers/volume/volume_visual.py:53: DeprecationWarning:
-  
+
   distutils Version classes are deprecated. Use packaging.version instead.
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

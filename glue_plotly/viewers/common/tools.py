@@ -74,7 +74,8 @@ class PlotlyZoomMode(PlotlySelectionMode):
         xmin, xmax = selector.xrange
         ymin, ymax = selector.yrange
         viewer_state = self.viewer.state
-        with self.viewer.figure.batch_update(), delay_callback(viewer_state, "x_min", "x_max", "y_min", "y_max"):
+        with self.viewer.figure.batch_update(), \
+             delay_callback(viewer_state, "x_min", "x_max", "y_min", "y_max"):
             viewer_state.x_min = xmin
             viewer_state.x_max = xmax
             viewer_state.y_min = ymin
@@ -99,7 +100,8 @@ class PlotlyHZoomMode(PlotlySelectionMode):
     def _on_selection(self, _trace, _points, selector):
         xmin, xmax = selector.xrange
         viewer_state = self.viewer.state
-        with self.viewer.figure.batch_update(), delay_callback(viewer_state, "x_min", "x_max"):
+        with self.viewer.figure.batch_update(), \
+             delay_callback(viewer_state, "x_min", "x_max"):
             viewer_state.x_min = xmin
             viewer_state.x_max = xmax
 
@@ -122,7 +124,8 @@ class PlotlyVZoomMode(PlotlySelectionMode):
     def _on_selection(self, _trace, _points, selector):
         ymin, ymax = selector.yrange
         viewer_state = self.viewer.state
-        with self.viewer.figure.batch_update(), delay_callback(viewer_state, "y_min", "y_max"):
+        with self.viewer.figure.batch_update(), \
+             delay_callback(viewer_state, "y_min", "y_max"):
             viewer_state.y_min = ymin
             viewer_state.y_max = ymax
 

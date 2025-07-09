@@ -53,7 +53,10 @@ def opacity_value_string(a):
 
 
 DECIMAL_PATTERN = "\\d+\\.?\\d*"
-RGBA_PATTERN = f"rgba\\(({DECIMAL_PATTERN}),\\s*({DECIMAL_PATTERN}),\\s*({DECIMAL_PATTERN}),\\s*({DECIMAL_PATTERN})\\)"
+RGBA_PATTERN = (
+    f"rgba\\(({DECIMAL_PATTERN}),\\s*({DECIMAL_PATTERN}),"
+    f"\\s*({DECIMAL_PATTERN}),\\s*({DECIMAL_PATTERN})\\)"
+)
 
 
 def rgba_string_to_values(rgba_str):
@@ -112,7 +115,10 @@ def frb_for_layer(viewer_state,
                   bounds):
 
     data = data_for_layer(layer_or_state)
-    layer_state = layer_or_state if isinstance(layer_or_state, LayerState) else layer_or_state.state
+    layer_state = (
+        layer_or_state if isinstance(layer_or_state, LayerState)
+        else layer_or_state.state
+    )
     is_data_layer = data is layer_or_state.layer
     target_data = getattr(viewer_state, "reference_data", data)
     data_frb = data.compute_fixed_resolution_buffer(

@@ -1,6 +1,5 @@
 import os
 
-import numpy as np
 from echo import ChoiceSeparator, SelectionCallbackProperty
 from echo.qt import autoconnect_callbacks_to_qt
 from glue_qt.utils import load_ui
@@ -19,7 +18,7 @@ class SortComponentsState(State):
 
     def __init__(self, components=component):
 
-        super(SortComponentsState, self).__init__()
+        super().__init__()
 
         self.component_helper = ComboHelper(self, "component")
         self.component_helper.choices = components
@@ -29,7 +28,7 @@ class SortComponentsDialog(QDialog):
 
     def __init__(self, components=None, parent=None):
 
-        super(SortComponentsDialog, self).__init__(parent=parent)
+        super().__init__(parent=parent)
 
         self.ui = load_ui("sort_components.ui", self,
                           directory=os.path.dirname(__file__))
@@ -53,7 +52,7 @@ class SortComponentsDialog(QDialog):
         components = type(self.state).component.get_choices(self.state)
         self.ui.list_component.clear()
 
-        for (component, k) in zip(components, np.arange(0, len(components))):
+        for component in components:
 
             if isinstance(component, ChoiceSeparator):
                 item = QListWidgetItem(str(component))
@@ -90,4 +89,4 @@ class SortComponentsDialog(QDialog):
             item = self.ui.list_component.item(idx)
             if item.checkState() == Qt.Checked:
                 self.sort_components.append(item.text())
-        super(SortComponentsDialog, self).accept()
+        super().accept()

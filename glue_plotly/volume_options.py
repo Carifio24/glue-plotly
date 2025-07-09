@@ -34,7 +34,7 @@ class VolumeDialogState(State):
 
 
 class VolumeOptionsDialog(QDialog):
-    """Dialog providing a GUI for selecting options for a Plotly volume export from glue."""
+    """Dialog providing a GUI for selecting options for a Plotly volume export."""
 
     def __init__(self, parent=None, viewer=None):
 

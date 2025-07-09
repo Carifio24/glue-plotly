@@ -168,9 +168,11 @@ def export_dendrogram(viewer):
 
 
 def build_plotly_call(app):
-    """"Export a glue session to a list of Plotly-formatted dictionaries and a dictionary of keyword arguments.
+    """"Export a glue session to data for sending to Chart Studio.
 
-    Currently, the returned dictionary of Plotly keyword arguments is empty.
+    This function exports the session to a list of Plotly-formatted dictionaries and a
+    dictionary of keyword arguments. Currently, the returned dictionary of Plotly
+    keyword arguments is empty.
     """
     args = []
     layout = {"showlegend": True, "barmode": "overlay", "bargap": 0,

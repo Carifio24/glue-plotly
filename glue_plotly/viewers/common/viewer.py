@@ -28,7 +28,7 @@ class PlotlyBaseView(IPyWidgetView):
 
     def __init__(self, session, state=None):
 
-        super(PlotlyBaseView, self).__init__(session, state=state)
+        super().__init__(session, state=state)
 
         self.selection_layer_id = uuid4().hex
         selection_layer = go.Heatmap(x0=0.5,
@@ -191,7 +191,7 @@ class PlotlyBaseView(IPyWidgetView):
     @property
     def unique_class(self):
         """A unique class assigned to the root widget.
-        
+
         This unique class has the form 'glue-plotly-<v4 UUID>'
         """
         return self._unique_class
