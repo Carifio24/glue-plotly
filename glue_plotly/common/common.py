@@ -42,11 +42,15 @@ def layers_to_export(viewer):
 # Count the number of unique Data objects (either directly or as parents of subsets)
 # used in the set of layers
 def data_count(layers):
-    data = set(layer.layer if isinstance(layer.layer, BaseData) else layer.layer.data for layer in layers)
+    data = {
+            layer.layer if isinstance(layer.layer, BaseData) else layer.layer.data
+            for layer in layers
+           }
     return len(data)
 
 
 def base_layout_config(viewer, include_dimensions=True, **kwargs):
+    """Creates the base layout configuration for a Plotly representation of a viewer"""
     # set the aspect ratio of the axes, the tick label size, the axis label
     # sizes, and the axes limits
 
@@ -77,7 +81,8 @@ def base_rectilinear_axis(viewer_state, axis):
     title = getattr(viewer_state, f"{axis}_axislabel")
     axislabel_size = getattr(viewer_state, f"{axis}_axislabel_size")
     ticklabel_size = getattr(viewer_state, f"{axis}_ticklabel_size")
-    range = [getattr(viewer_state, f"{axis}_min"), getattr(viewer_state, f"{axis}_max")]
+    range = [getattr(viewer_state, f"{axis}_min"),
+             getattr(viewer_state, f"{axis}_max")]
     log = getattr(viewer_state, f"{axis}_log")
     axis_dict = dict(
         showspikes=False,
@@ -146,7 +151,8 @@ def rgb_colors(layer_state, mask, cmap_att):
     rgba_list = np.array([
         cmap(norm(point)) for point in color_values])
     rgba_list = [[int(256 * t) for t in rgba[:3]] + [rgba[3]] for rgba in rgba_list]
-    rgba_strs = [f"rgba({r},{g},{b},{opacity_value_string(a)})" for r, g, b, a in rgba_list]
+    rgba_strs = [f"rgba({r},{g},{b},{opacity_value_string(a)})"
+                 for r, g, b, a in rgba_list]
     return rgba_strs
 
 

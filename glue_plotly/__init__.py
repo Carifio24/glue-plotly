@@ -1,4 +1,5 @@
 import os
+from contextlib import suppress
 
 from pkg_resources import DistributionNotFound, get_distribution
 
@@ -13,19 +14,15 @@ PLOTLY_ERROR_MESSAGE = "An error occurred during the export to Plotly:"
 
 
 def setup():
-    try:
+    with suppress(ImportError):
         setup_qt()
-    except ImportError:
-        pass
 
-    try:
+    with suppress(ImportError):
         setup_jupyter()
-    except ImportError:
-        pass
 
 
 def setup_qt():
-
+    """Performs necessary setup for using glue-plotly with glue-qt."""
     from . import common  # noqa
     from .html_exporters import qt  # noqa
     from .web.qt import setup
@@ -85,6 +82,7 @@ def setup_qt():
 
 
 def setup_jupyter():
+    """Performs necessary setup for using glue-plotly with glue-jupyter."""
     from .html_exporters import jupyter # noqa
     from glue_jupyter.bqplot.histogram import BqplotHistogramView
     from glue_jupyter.bqplot.image import BqplotImageView
@@ -96,8 +94,10 @@ def setup_jupyter():
     BqplotImageView.tools += ["save:bqplot_plotlyimage2d"]
     BqplotProfileView.tools += ["save:bqplot_plotlyprofile"]
     BqplotScatterView.tools += ["save:bqplot_plotly2d"]
-    IpyvolumeScatterView.tools = [tool for tool in IpyvolumeScatterView.tools] + ["save:jupyter_plotly3dscatter"]
-    IpyvolumeVolumeView.tools = [tool for tool in IpyvolumeVolumeView.tools] + ["save:jupyter_plotlyvolume"]
+    IpyvolumeScatterView.tools = list(IpyvolumeScatterView.tools) + \
+                                 ["save:jupyter_plotly3dscatter"]
+    IpyvolumeVolumeView.tools = list(IpyvolumeVolumeView.tools) + \
+                                ["save:jupyter_plotlyvolume"]
 
     try:
         from glue_vispy_viewers.scatter.jupyter import JupyterVispyScatterViewer
