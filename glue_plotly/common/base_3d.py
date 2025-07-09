@@ -16,7 +16,7 @@ def dimensions(viewer_state):
     else:
         # the 1200 size is arbitrary, could change to any width;
         # just need to scale rest accordingly
-        width = 1200  
+        width = 1200
         height = 1200
         depth = 1200
 
@@ -24,7 +24,7 @@ def dimensions(viewer_state):
 
 
 def projection_type(viewer_state):
-    perspective = getattr(viewer_state, "perspective_view", True) 
+    perspective = getattr(viewer_state, "perspective_view", True)
     return "perspective" if perspective else "orthographic"
 
 

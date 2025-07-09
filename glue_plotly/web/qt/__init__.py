@@ -1,6 +1,5 @@
 def setup():
-    """glue setup function for Plotly Qt exporter."""
-
+    """The glue setup function for the Plotly Qt exporter."""
     from glue.config import exporters
     from glue_plotly.web.export_plotly import (
         DISPATCH,

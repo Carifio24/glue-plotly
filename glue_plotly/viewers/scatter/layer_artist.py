@@ -21,7 +21,12 @@ __all__ = ["PlotlyScatterLayerArtist"]
 
 
 CMAP_PROPERTIES = {"cmap_mode", "cmap_att", "cmap_vmin", "cmap_vmax", "cmap"}
-BORDER_PROPERTIES = {"border_visible", "border_size", "border_color", "border_color_match_layer"}
+BORDER_PROPERTIES = {
+    "border_visible",
+    "border_size",
+    "border_color",
+    "border_color_match_layer"
+}
 MARKER_PROPERTIES = {
     "size_mode",
     "size_att",
@@ -129,7 +134,10 @@ class PlotlyScatterLayerArtist(LayerArtist):
         return self._get_traces_with_id(self._vector_id)
 
     def traces(self):
-        return chain([self._get_scatter()], self._get_lines(), self._get_error_bars(), self._get_vectors())
+        return chain([self._get_scatter()],
+                     self._get_lines(),
+                     self._get_error_bars(),
+                     self._get_vectors())
 
     def _update_data(self):
 
@@ -213,12 +221,16 @@ class PlotlyScatterLayerArtist(LayerArtist):
             line_traces_visible = True
             if force or "cmap_mode" in changed:
                 if not (fixed_color or lines):
-                    line, lines = rectilinear_lines(self.state, scatter.marker, scatter.x, scatter.y)
+                    line, lines = rectilinear_lines(self.state,
+                                                    marker=scatter.marker,
+                                                    x=scatter.x,
+                                                    y=scatter.y)
                     if lines:
                         self._lines_id = lines[0].meta
                     self.view.figure.add_traces(lines)
 
-                    # The newly-created line traces already have the correct properties, so we can return
+                    # The newly-created line traces already have the
+                    # correct properties, so we can return
                     return
 
                 if fixed_color and lines:
@@ -226,12 +238,14 @@ class PlotlyScatterLayerArtist(LayerArtist):
 
             if (force or "line_visible" in changed) or not line_traces_visible:
                 visible = False if not line_traces_visible else self.state.line_visible
-                self.view.figure.for_each_trace(lambda t: t.update(visible=visible), dict(meta=self._lines_id))
+                self.view.figure.for_each_trace(lambda t: t.update(visible=visible),
+                                                dict(meta=self._lines_id))
 
             if force or len(changed & {"linestyle", "linewidth", "color"}) > 0:
                 linestyle = LINESTYLES[self.state.linestyle]
                 if fixed_color:
-                    line = scatter.line.update(dash=linestyle, width=self.state.linewidth)
+                    line = scatter.line.update(dash=linestyle,
+                                               width=self.state.linewidth)
                     scatter.update(line=line)
                 else:
                     rgba_strs = scatter.marker.color

@@ -58,8 +58,10 @@ class PlotlyBaseView(IPyWidgetView):
         self.state.add_callback("y_log", self._update_y_log, priority=10000)
         self.state.add_callback("show_axes", self._update_axes_visible)
 
-        self.axis_x.on_change(lambda _obj, x_range: self._set_x_state_bounds(x_range), "range")
-        self.axis_y.on_change(lambda _obj, y_range: self._set_y_state_bounds(y_range), "range")
+        self.axis_x.on_change(lambda _obj, x_range: self._set_x_state_bounds(x_range),
+                              "range")
+        self.axis_y.on_change(lambda _obj, y_range: self._set_y_state_bounds(y_range),
+                              "range")
 
         self._update_plotly_x_limits()
         self._update_plotly_y_limits()
@@ -182,12 +184,14 @@ class PlotlyBaseView(IPyWidgetView):
                                        override_mode=use_current)
                 self._session.command_stack.do(cmd)
 
-    # Interface stub for now
-    # TODO: Should we have anything here?
+    # Interface stub
     def redraw(self):
         pass
 
     @property
     def unique_class(self):
-        """This is a unique identifier, based on a v4 UUID, that is assigned to the root widget as a class."""
+        """A unique class assigned to the root widget.
+        
+        This unique class has the form 'glue-plotly-<v4 UUID>'
+        """
         return self._unique_class

@@ -80,5 +80,7 @@ class PlotlyHistogramView(PlotlyBaseView):
             hi = bins[bins >= hi].min()
 
         roi_new = XRangeROI(min=lo, max=hi)
-        subset_state = roi_to_subset_state(roi_new, x_att=self.state.x_att, x_categories=self.state.x_categories)
+        subset_state = roi_to_subset_state(roi_new,
+                                           x_att=self.state.x_att,
+                                           x_categories=self.state.x_categories)
         self.apply_subset_state(subset_state, override_mode=override_mode)

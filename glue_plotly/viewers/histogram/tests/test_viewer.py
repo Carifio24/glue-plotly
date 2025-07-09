@@ -61,10 +61,12 @@ class TestHistogramViewer(BasePlotlyViewTests):
         assert y_axis.range == (0, 5)
 
         assert all(f.family == DEFAULT_FONT for f in
-                   (x_axis.title.font, x_axis.tickfont, y_axis.title.font, y_axis.tickfont))
+                   (x_axis.title.font, x_axis.tickfont,
+                    y_axis.title.font, y_axis.tickfont))
 
-        common_items = dict(showgrid=False, showline=True, mirror=True, rangemode="normal",
-                            zeroline=False, showspikes=False, showticklabels=True)
+        common_items = dict(showgrid=False, showline=True, mirror=True,
+                            rangemode="normal", zeroline=False,
+                            showspikes=False, showticklabels=True)
         for axis in x_axis, y_axis:
             assert all(axis[key] == value for key, value in common_items.items())
 
