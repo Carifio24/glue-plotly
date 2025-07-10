@@ -1,10 +1,10 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 
-importorskip("glue_jupyter")
+pytest.importorskip("glue_jupyter")
 
 from glue_jupyter.bqplot.histogram import BqplotHistogramView  # noqa: E402
 

@@ -35,7 +35,9 @@ class SaveHoverState(State):
         def display_func(exporter):
             if exporter.extension == "":
                 return f"{exporter.label} (*)"
-            return "{0} ({1})".format(exporter.label, " ".join("*." + ext for ext in exporter.extension))
+
+            extensions_string = " ".join("*." + ext for ext in exporter.extension)
+            return "{0} ({1})".format(exporter.label, extensions_string)
 
         SaveHoverState.exporter.set_choices(self, exporters)
         SaveHoverState.exporter.set_display_func(self, display_func)

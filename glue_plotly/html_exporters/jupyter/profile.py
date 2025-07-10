@@ -4,8 +4,7 @@ from plotly.offline import plot
 from glue.config import viewer_tool
 from glue_plotly.common import data_count, layers_to_export
 from glue_plotly.common.profile import layout_config, traces_for_layer
-
-from ...jupyter_base_export_tool import JupyterBaseExportTool
+from glue_plotly.jupyter_base_export_tool import JupyterBaseExportTool
 
 
 @viewer_tool
@@ -23,7 +22,9 @@ class PlotlyProfileBqplotExport(JupyterBaseExportTool):
         layers = layers_to_export(self.viewer)
         add_data_label = data_count(layers) > 1
         for layer in layers:
-            traces = traces_for_layer(self.viewer.state, layer.state, add_data_label=add_data_label)
+            traces = traces_for_layer(self.viewer.state,
+                                      layer.state,
+                                      add_data_label=add_data_label)
             fig.add_traces(traces)
 
         plot(fig, include_mathjax="cdn", filename=filepath, auto_open=False)

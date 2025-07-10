@@ -18,7 +18,12 @@ from .common import (
     sanitize,
 )
 
-LINESTYLES = {"solid": "solid", "dotted": "dot", "dashed": "dash", "dashdot": "dashdot"}
+LINESTYLES = {
+    "solid": "solid",
+    "dotted": "dot",
+    "dashed": "dash",
+    "dashdot": "dashdot"
+}
 
 
 def projection_type(viewer_state):
@@ -291,7 +296,8 @@ def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=Tr
 
     # add vectors
     if rectilinear and layer_state.vector_visible and layer_state.vector_scaling > 0.1:
-        vec_traces = rectilinear_2d_vectors(viewer, layer_state, marker, mask, x, y, legend_group)
+        vec_traces = rectilinear_2d_vectors(viewer, layer_state, marker, mask,
+                                            x, y, legend_group)
         traces["vector"] = vec_traces
 
     # add line properties
@@ -305,11 +311,13 @@ def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=Tr
 
     if rectilinear:
         if layer_state.xerr_visible:
-            xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, mask, x, y, "x", legend_group)
+            xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, mask,
+                                                       x, y, "x", legend_group)
             if xerr_traces:
                 traces["xerr"] = xerr_traces
         if layer_state.yerr_visible:
-            yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, mask, x, y, "y", legend_group)
+            yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, mask,
+                                                       x, y, "y", legend_group)
             if yerr_traces:
                 traces["yerr"] = yerr_traces
 
@@ -362,8 +370,10 @@ def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=Tr
             x = np.rad2deg(x)
             y = np.rad2deg(y)
         traces["scatter"] = [go.Scattergeo(lon=x, lat=y, projection_type=proj,
-                                           showland=False, showcoastlines=False, showlakes=False,
-                                           lataxis_showgrid=False, lonaxis_showgrid=False,
+                                           showland=False, showcoastlines=False,
+                                           showlakes=False,
+                                           lataxis_showgrid=False,
+                                           lonaxis_showgrid=False,
                                            bgcolor=settings.BACKGROUND_COLOR,
                                            framecolor=settings.FOREGROUND_COLOR)]
 

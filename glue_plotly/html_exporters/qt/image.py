@@ -40,14 +40,19 @@ class PlotlyImage2DExport(Tool):
         secondary_y = "yaxis2" in config
 
         if secondary_x or secondary_y:
-            fig = make_subplots(specs=[[{"secondary_y": True}]], horizontal_spacing=0, vertical_spacing=0)
+            fig = make_subplots(specs=[[{"secondary_y": True}]],
+                                horizontal_spacing=0,
+                                vertical_spacing=0)
             fig.update_layout(**config)
         else:
             layout = go.Layout(**config)
             fig = go.Figure(layout=layout)
 
-        traces_to_add = traces(self.viewer, secondary_x=secondary_x, secondary_y=secondary_y,
-                               hover_selections=checked_dictionary, add_data_label=add_data_label)
+        traces_to_add = traces(self.viewer,
+                               secondary_x=secondary_x,
+                               secondary_y=secondary_y,
+                               hover_selections=checked_dictionary,
+                               add_data_label=add_data_label)
         for trace in traces_to_add:
             fig.add_trace(trace)
 
@@ -61,7 +66,9 @@ class PlotlyImage2DExport(Tool):
         if len(scatter_layers) > 0:
             dc_hover = hover_data_collection_for_viewer(
                 self.viewer,
-                layer_condition=lambda layer: layer.state.visible and layer.enabled and layer in scatter_layers
+                layer_condition=lambda layer: layer.state.visible and \
+                                              layer.enabled and \
+                                              layer in scatter_layers
             )
 
             dialog = SaveHoverDialog(data_collection=dc_hover)
@@ -77,8 +84,9 @@ class PlotlyImage2DExport(Tool):
             return
 
         # It would be better to create the layout config in `_export_to_plotly`.
-        # But we get some of our axis font sizes from matplotlib, some of which seems to cause problems
-        # when run in a QThread. So for now, we get the layout config here.
+        # But we get some of our axis font sizes from matplotlib, some of which
+        # seems to cause problems when run in a QThread.
+        # So for now, we get the layout config here.
         config = layout_config(self.viewer)
         ax = axes_data_from_mpl(self.viewer)
         config.update(**ax)

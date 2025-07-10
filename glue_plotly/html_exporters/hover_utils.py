@@ -28,4 +28,5 @@ def hover_data_collection_for_viewer(viewer,
     if layer_condition is None:
         layer_condition = default_layer_condition
 
-    return DataCollection([hover_dummy_data(layer.layer) for layer in viewer.layers if layer_condition(layer)])
+    return DataCollection([hover_dummy_data(layer.layer) for layer in viewer.layers \
+                           if layer_condition(layer)])

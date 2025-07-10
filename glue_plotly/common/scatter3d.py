@@ -23,7 +23,8 @@ def size_info(layer_state, mask, size_att="size_attribute"):
         return layer_state.size_scaling * layer_state.size
 
     # scale size of points by set size scaling
-    s = ensure_numerical(layer_state.layer[getattr(layer_state, size_att)][mask].ravel())
+    size_att = getattr(layer_state, size_att)
+    s = ensure_numerical(layer_state.layer[size_att][mask].ravel())
     s = ((s - layer_state.size_vmin) /
          (layer_state.size_vmax - layer_state.size_vmin))
     # The following ensures that the sizes are in the
@@ -84,12 +85,14 @@ def error_bar_info(layer_state, mask):
         err = {}
         if getattr(layer_state, f"{ax}err_visible", False):
             err["type"] = "data"
+            err_att = getattr(layer_state, f"{ax}err_attribute")
             err["array"] = np.absolute(ensure_numerical(
-                layer_state.layer[getattr(layer_state, f"{ax}err_attribute")][mask].ravel()))
+                layer_state.layer[err_att][mask].ravel()))
             err["visible"] = True
 
             # AFAICT, it seems that we can't have error bars follow the colorscale
-            # (if we don't set this and aren't in fixed color mode, they just don't appear).
+            # (if we don't set this and aren't in fixed color mode,
+            # they just don't appear).
             # So for now, let's just make them black.
             if layer_state.color_mode != "Fixed":
                 err["color"] = "#000000"

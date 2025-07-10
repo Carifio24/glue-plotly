@@ -19,7 +19,9 @@ NUMPY_LT_2, requires_numpy_lt2 = make_skipper("numpy", version="2.0", skip_if="g
 class TestDendrogram:
 
     def setup_method(self, method):
-        self.data = Data(label="dendrogram", parent=[-1, 0, 1, 1], height=[1.3, 2.2, 3.2, 4.4])
+        self.data = Data(label="dendrogram",
+                         parent=[-1, 0, 1, 1],
+                         height=[1.3, 2.2, 3.2, 4.4])
         self.app = GlueApplication()
         self.app.session.data_collection.append(self.data)
         self.viewer = self.app.new_data_viewer(DendrogramViewer)
@@ -53,9 +55,11 @@ class TestDendrogram:
         assert xaxis["showgrid"] is False
         assert xaxis["range"] == [self.viewer.state.x_min, self.viewer.state.x_max]
 
-        default_settings = dict(showgrid=False, showline=True, mirror=True, rangemode="normal",
-                                zeroline=False, showspikes=False, showticklabels=True,
-                                linecolor=settings.FOREGROUND_COLOR, tickcolor=settings.FOREGROUND_COLOR)
+        default_settings = dict(showgrid=False, showline=True, mirror=True,
+                                rangemode="normal", zeroline=False, showspikes=False,
+                                showticklabels=True,
+                                linecolor=settings.FOREGROUND_COLOR,
+                                tickcolor=settings.FOREGROUND_COLOR)
         assert default_settings.items() <= yaxis.items()
 
         assert yaxis["type"] == "log" if log_y else "linear"

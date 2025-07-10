@@ -84,7 +84,7 @@ class TestScatter2DRectilinear(TestScatter2D):
         assert len(self.x) == 3
         assert len(self.y) == 3
 
-    @pytest.mark.parametrize("log_x, log_y", product([True, False], repeat=2))
+    @pytest.mark.parametrize(("log_x, log_y"), product([True, False], repeat=2))
     def test_axes(self, log_x, log_y):
         self.viewer.state.x_log = log_x
         self.viewer.state.y_log = log_y
@@ -94,9 +94,11 @@ class TestScatter2DRectilinear(TestScatter2D):
         x_axis = base_rectilinear_axis(self.viewer.state, "x")
         y_axis = base_rectilinear_axis(self.viewer.state, "y")
 
-        common_items = dict(showgrid=False, showline=True, mirror=True, rangemode="normal",
-                            zeroline=False, showspikes=False, showticklabels=True,
-                            linecolor=settings.FOREGROUND_COLOR, tickcolor=settings.FOREGROUND_COLOR)
+        common_items = dict(showgrid=False, showline=True, mirror=True,
+                            rangemode="normal", zeroline=False,
+                            showspikes=False, showticklabels=True,
+                            linecolor=settings.FOREGROUND_COLOR,
+                            tickcolor=settings.FOREGROUND_COLOR)
         assert common_items.items() <= x_axis.items()
         assert common_items.items() <= y_axis.items()
 
@@ -157,8 +159,10 @@ class TestScatter2DRectilinear(TestScatter2D):
         layer_state.xerr_visible = True
         layer_state.yerr_visible = True
         marker = base_marker(layer_state, self.mask)
-        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, "x")
-        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, "y")
+        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask,
+                                                   self.x, self.y, "x")
+        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask,
+                                                   self.x, self.y, "y")
 
         mask_size = sum(self.mask)
         assert len(xerr["array"]) == mask_size
@@ -181,8 +185,10 @@ class TestScatter2DRectilinear(TestScatter2D):
         layer_state.xerr_visible = True
         layer_state.yerr_visible = True
         marker = base_marker(layer_state, self.mask)
-        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, "x")
-        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask, self.x, self.y, "y")
+        xerr, xerr_traces = rectilinear_error_bars(layer_state, marker, self.mask,
+                                                   self.x, self.y, "x")
+        yerr, yerr_traces = rectilinear_error_bars(layer_state, marker, self.mask,
+                                                   self.x, self.y, "y")
 
         mask_size = sum(self.mask)
         assert len(xerr["array"]) == mask_size
@@ -234,7 +240,8 @@ class TestScatter2DRectilinear(TestScatter2D):
         layer_state.cmap_mode = cmap_mode
 
         marker = base_marker(layer_state, self.mask)
-        traces = rectilinear_2d_vectors(self.viewer, layer_state, marker, self.mask, self.x, self.y)
+        traces = rectilinear_2d_vectors(self.viewer, layer_state, marker,
+                                        self.mask, self.x, self.y)
         color = color_info(layer_state, self.mask)
         if cmap_mode == "Fixed":
             assert len(traces) == 1
@@ -251,8 +258,11 @@ class TestScatter2DRectilinear(TestScatter2D):
         self.layer.state.yerr_visible = True
 
         hover_components = [self.data.id["x"], self.data.id["z"]]
-        hover_data = {cid.label: cid in hover_components for cid in self.layer.layer.components}
-        traces = trace_data_for_layer(self.viewer, self.layer.state, hover_data=hover_data, add_data_label=True)
+        hover_data = { cid.label: cid in hover_components \
+                       for cid in self.layer.layer.components }
+        traces = trace_data_for_layer(self.viewer, self.layer.state,
+                                      hover_data=hover_data,
+                                      add_data_label=True)
         assert set(traces.keys()) == {"scatter", "vector"}
         scatter = traces["scatter"][0]
         assert scatter["hoverinfo"] == "text"

@@ -33,7 +33,9 @@ class PlotlyImageBqplotExport(JupyterBaseExportTool):
         if len(scatter_layers) > 0:
             dc_hover = hover_data_collection_for_viewer(
                 self.viewer,
-                layer_condition=lambda layer: layer.state.visible and layer.enabled and layer in scatter_layers
+                layer_condition=lambda layer: layer.state.visible and \
+                                              layer.enabled and \
+                                              layer in scatter_layers
             )
 
             self.save_hover_dialog = \
@@ -63,13 +65,17 @@ class PlotlyImageBqplotExport(JupyterBaseExportTool):
         config["showlegend"] = len(layers) > 1
 
         if secondary_x or secondary_y:
-            fig = make_subplots(specs=[[{"secondary_y": True}]], horizontal_spacing=0, vertical_spacing=0)
+            fig = make_subplots(specs=[[{"secondary_y": True}]],
+                                horizontal_spacing=0,
+                                vertical_spacing=0)
             fig.update_layout(**config)
         else:
             layout = go.Layout(**config)
             fig = go.Figure(layout=layout)
 
-        checked_dictionary = self.save_hover_dialog.checked_dictionary if hasattr(self, "save_hover_dialog") else None
+        checked_dictionary = self.save_hover_dialog.checked_dictionary \
+                             if hasattr(self, "save_hover_dialog") \
+                             else None
         traces_to_add = traces(self.viewer,
                                secondary_x=secondary_x,
                                secondary_y=secondary_y,

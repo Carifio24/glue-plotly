@@ -61,9 +61,11 @@ class TestHistogram:
         x_axis = axis_from_mpl(self.viewer, "x")
         y_axis = axis_from_mpl(self.viewer, "y")
 
-        common_items = dict(showgrid=False, showline=True, mirror=True, rangemode="normal",
-                            zeroline=False, showspikes=False, showticklabels=True,
-                            linecolor=settings.FOREGROUND_COLOR, tickcolor=settings.FOREGROUND_COLOR)
+        common_items = dict(showgrid=False, showline=True, mirror=True,
+                            rangemode="normal", zeroline=False,
+                            showspikes=False, showticklabels=True,
+                            linecolor=settings.FOREGROUND_COLOR,
+                            tickcolor=settings.FOREGROUND_COLOR)
         assert common_items.items() <= x_axis.items()
         assert common_items.items() <= y_axis.items()
 

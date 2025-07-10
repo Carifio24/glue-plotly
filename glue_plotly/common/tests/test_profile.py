@@ -16,7 +16,8 @@ from glue_plotly.utils import PLOTLY_MAJOR_VERSION
 class TestProfile:
 
     def setup_method(self, method):
-        self.data = Data(label="profile", w=arange(0, 240, 10).reshape((3, 4, 2)).astype(float))
+        self.data = Data(label="profile",
+                         w=arange(0, 240, 10).reshape((3, 4, 2)).astype(float))
         self.data.coords = SimpleCoordinates()
         self.app = GlueApplication()
         self.app.session.data_collection.append(self.data)
@@ -64,9 +65,11 @@ class TestProfile:
         x_axis = axis_from_mpl(self.viewer, "x")
         y_axis = axis_from_mpl(self.viewer, "y")
 
-        common_items = dict(showgrid=False, showline=True, mirror=True, rangemode="normal",
-                            zeroline=False, showspikes=False, showticklabels=True,
-                            linecolor=settings.FOREGROUND_COLOR, tickcolor=settings.FOREGROUND_COLOR)
+        common_items = dict(showgrid=False, showline=True, mirror=True,
+                            rangemode="normal", zeroline=False,
+                            showspikes=False, showticklabels=True,
+                            linecolor=settings.FOREGROUND_COLOR,
+                            tickcolor=settings.FOREGROUND_COLOR)
         assert common_items.items() <= x_axis.items()
         assert common_items.items() <= y_axis.items()
 

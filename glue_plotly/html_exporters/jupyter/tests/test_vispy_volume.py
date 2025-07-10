@@ -1,12 +1,12 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 from glue_plotly.html_exporters.jupyter.tests.test_base import BaseTestJupyterExporter
 
-importorskip("glue_jupyter")
-importorskip("glue_vispy_viewers")
+pytest.importorskip("glue_jupyter")
+pytest.importorskip("glue_vispy_viewers")
 
 from glue_vispy_viewers.volume.jupyter import JupyterVispyVolumeViewer  # noqa: E402
 from numpy import arange, ones  # noqa: E402
