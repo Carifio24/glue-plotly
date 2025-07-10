@@ -10,6 +10,10 @@ lint.ignore = [
     "ARG004",  # unused-static-method-argument
     "ARG005",  # unused-lambda-argument
 
+    # mccabe (C90) : code complexity
+    # TODO: configure maximum allowed complexity (default 10; 40 exceptions, 4 > 28).
+    "C901",  # McCabeComplexity
+
     # pydocstyle (D)
     # Missing Docstrings
     "D100",  # undocumented-public-module
@@ -78,6 +82,12 @@ lint.ignore = [
     "PTH122",  # os-path-splitext
     "PTH123",  # builtin-open
 
+    # flake8-todos (TD)
+    "TD003",  # Missing issue link on the line following this TODO
+
+    # tryceratops (TRY)
+    "TRY003",  # raise-vanilla-args
+
     # pyupgrade (UP)
     "UP004",  # Class `{name}` inherits from `object`
     "UP008",  # Use `super()` instead of `super(__class__, self)`
@@ -98,5 +108,8 @@ lint.unfixable = [
 
 [lint.extend-per-file-ignores]
 "glue_plotly/viewers/common/tests/base_viewer_tests.py" = [
-    "S101",
+    "S101",  # assert
+]
+"glue_plotly/common/image.py" = [
+    "N811",  # constant-imported-as-non-constant
 ]

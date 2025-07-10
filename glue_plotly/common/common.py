@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 import numpy as np
 from matplotlib.colors import Normalize
 
@@ -118,10 +120,8 @@ def base_rectilinear_axis(viewer_state, axis):
 def sanitize(*arrays):
     mask = np.ones(arrays[0].shape, dtype=bool)
     for a in arrays:
-        try:
+        with suppress(TypeError):  # non-numeric dtype
             mask &= (~np.isnan(a))
-        except TypeError:  # non-numeric dtype
-            pass
 
     return mask, tuple(a[mask].ravel() for a in arrays)
 
@@ -151,9 +151,8 @@ def rgb_colors(layer_state, mask, cmap_att):
     rgba_list = np.array([
         cmap(norm(point)) for point in color_values])
     rgba_list = [[int(256 * t) for t in rgba[:3]] + [rgba[3]] for rgba in rgba_list]
-    rgba_strs = [f"rgba({r},{g},{b},{opacity_value_string(a)})"
-                 for r, g, b, a in rgba_list]
-    return rgba_strs
+    return [f"rgba({r},{g},{b},{opacity_value_string(a)})"
+            for r, g, b, a in rgba_list]
 
 
 def color_info(layer_state,

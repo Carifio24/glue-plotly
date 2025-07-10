@@ -41,7 +41,7 @@ def background_color(viewer):
     if using_colormaps:
         return [256, 256, 256, 1]
     img = composite_array(viewer)()
-    bg_color = [_ for _ in img[0][0]]
+    bg_color = list(img[0][0])
     for i in range(3):
         bg_color[i] *= 256
     return bg_color
@@ -87,10 +87,7 @@ def axes_data_from_mpl(viewer):
             if ax == "y":
                 labels = list(reversed(labels))
             labels = cleaned_labels(labels)
-            if ax == "x":
-                axis_range = [xmin, xmax]
-            else:
-                axis_range = [ymin, ymax]
+            axis_range = [xmin, xmax] if ax == "x" else [ymin, ymax]
             axis_info = dict(
                 showspikes=False,
                 linecolor=settings.FOREGROUND_COLOR,
@@ -217,7 +214,9 @@ def layers_by_type(viewer):
         elif isinstance(layer.state, ScatterLayerState):
             scatter_layers.append(layer)
 
-    return dict(scatter=scatter_layers, image=image_layers, image_subset=image_subset_layers)
+    return dict(scatter=scatter_layers,
+                image=image_layers,
+                image_subset=image_subset_layers)
 
 
 def full_view_transpose(viewer_state):
@@ -226,7 +225,8 @@ def full_view_transpose(viewer_state):
     full_view[viewer_state.y_att.axis] = slice(None)
     for i in range(viewer_state.reference_data.ndim):
         if isinstance(full_view[i], slice):
-            full_view[i] = slice_to_bound(full_view[i], viewer_state.reference_data.shape[i])
+            full_view[i] = slice_to_bound(full_view[i],
+                                          viewer_state.reference_data.shape[i])
 
     return full_view, transpose
 
@@ -260,7 +260,9 @@ def traces_for_pixel_subset_layer(viewer_state, layer_state):
     subset_state = layer_state.layer.subset_state
 
     try:
-        x, y = subset_state.get_xy(layer_state.layer.data, viewer_state.x_att.axis, viewer_state.y_att.axis)
+        x, y = subset_state.get_xy(layer_state.layer.data,
+                                   viewer_state.x_att.axis,
+                                   viewer_state.y_att.axis)
         line_data = dict(
             mode="lines",
             marker=dict(
@@ -271,8 +273,14 @@ def traces_for_pixel_subset_layer(viewer_state, layer_state):
             legendgroup=uuid4().hex
         )
 
-        x_line_data = {**line_data, "x": [x, x], "y": [viewer_state.y_min, viewer_state.y_max], "showlegend": True}
-        y_line_data = {**line_data, "x": [viewer_state.x_min, viewer_state.x_max], "y": [y, y], "showlegend": False}
+        x_line_data = {**line_data,
+                       "x": [x, x],
+                       "y": [viewer_state.y_min, viewer_state.y_max],
+                       "showlegend": True}
+        y_line_data = {**line_data,
+                       "x": [viewer_state.x_min, viewer_state.x_max],
+                       "y": [y, y],
+                       "showlegend": False}
         return [Scatter(**x_line_data), Scatter(**y_line_data)]
     except IncompatibleAttribute:
         return []
@@ -282,8 +290,10 @@ def traces_for_nonpixel_subset_layer(viewer_state, layer_state, full_view, trans
     subset_state = layer_state.layer.subset_state
     ref_data = viewer_state.reference_data
     color = fixed_color(layer_state)
-    buffer = ref_data.compute_fixed_resolution_buffer(full_view, target_data=ref_data,
-                                                      broadcast=False, subset_state=subset_state)
+    buffer = ref_data.compute_fixed_resolution_buffer(full_view,
+                                                      target_data=ref_data,
+                                                      broadcast=False,
+                                                      subset_state=subset_state)
     if transpose:
         buffer = buffer.transpose()
 
@@ -309,7 +319,8 @@ def traces_for_nonpixel_subset_layer(viewer_state, layer_state, full_view, trans
     return [Heatmap(**image_info)]
 
 
-def traces_for_scatter_layer(viewer_state, layer_state, hover_data=None, add_data_label=True):
+def traces_for_scatter_layer(viewer_state, layer_state,
+                             hover_data=None, add_data_label=True):
     x = layer_state.layer[viewer_state.x_att].copy()
     y = layer_state.layer[viewer_state.y_att].copy()
     arrs = [x, y]
@@ -404,7 +415,8 @@ def single_color_trace(viewer):
     return Image(**image_info)
 
 
-def traces(viewer, secondary_x=False, secondary_y=False, hover_selections=None, add_data_label=True):
+def traces(viewer, secondary_x=False, secondary_y=False,
+           hover_selections=None, add_data_label=True):
     traces = []
     layers = layers_by_type(viewer)
     using_colormaps = viewer.state.color_mode == "Colormaps"
@@ -426,10 +438,13 @@ def traces(viewer, secondary_x=False, secondary_y=False, hover_selections=None, 
         if isinstance(subset_state, PixelSubsetState):
             traces += traces_for_pixel_subset_layer(viewer.state, layer.state)
         else:
-            traces += traces_for_nonpixel_subset_layer(viewer.state, layer.state, full_view, transpose)
+            traces += traces_for_nonpixel_subset_layer(viewer.state, layer.state,
+                                                       full_view, transpose)
 
     for layer in layers["scatter"]:
-        hover_data = hover_selections[layer.state.layer.label] if hover_selections else None
+        hover_data = hover_selections[layer.state.layer.label] \
+                     if hover_selections \
+                     else None
         traces += traces_for_scatter_layer(viewer.state, layer.state,
                                            hover_data=hover_data,
                                            add_data_label=add_data_label)

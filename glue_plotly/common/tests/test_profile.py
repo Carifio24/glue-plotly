@@ -55,7 +55,7 @@ class TestProfile:
         assert data_count(export_layers) == 1
         assert sum(sum(sum(self.mask))) == 24
 
-    @pytest.mark.parametrize("log_x, log_y", product([True, False], repeat=2))
+    @pytest.mark.parametrize(("log_x", "log_y"), product([True, False], repeat=2))
     def test_axes(self, log_x, log_y):
         self.viewer.state.x_log = log_x
         self.viewer.state.y_log = log_y

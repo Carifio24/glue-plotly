@@ -84,7 +84,7 @@ class TestScatter2DRectilinear(TestScatter2D):
         assert len(self.x) == 3
         assert len(self.y) == 3
 
-    @pytest.mark.parametrize(("log_x, log_y"), product([True, False], repeat=2))
+    @pytest.mark.parametrize(("log_x", "log_y"), product([True, False], repeat=2))
     def test_axes(self, log_x, log_y):
         self.viewer.state.x_log = log_x
         self.viewer.state.y_log = log_y

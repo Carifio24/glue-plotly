@@ -6,7 +6,7 @@ from glue_qt.utils import load_ui
 from qtpy.QtCore import Qt
 from qtpy.QtWidgets import QDialog, QListWidgetItem
 
-from ..base_save_hover import BaseSaveHoverDialog
+from glue_plotly.html_exporters.base_save_hover import BaseSaveHoverDialog
 
 __all__ = ["SaveHoverDialog"]
 

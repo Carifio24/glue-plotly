@@ -137,7 +137,7 @@ def frb_for_layer(viewer_state,
     return subcube * data_frb
 
 
-def font(family, size, color) -> dict:
+def font(family, size, color):
     return dict(
         family=family,
         size=size,

@@ -32,13 +32,13 @@ def values(viewer_state, layer_state, bounds, precomputed=None):
     else:
         values = frb_for_layer(viewer_state, layer_state, bounds)
 
-    # This accounts for two transformations: the fact that the viewer bounds are in reverse order,
+    # This accounts for two transformations:
+    # the fact that the viewer bounds are in reverse order,
     # plus a need to change R -> L handedness for Plotly
     values = values.transpose(1, 2, 0)
     min_value = nanmin(values)
     replacement = min_value - 1
-    replaced = nan_to_num(values, replacement)
-    return replaced
+    return nan_to_num(values, replacement)
 
 
 def colorscale(layer_state, size=10):

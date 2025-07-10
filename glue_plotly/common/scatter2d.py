@@ -73,7 +73,7 @@ def radial_axis(viewer, tickvals=None, ticklabels=None):
     if tickvals is not None and ticklabels is not None:
         axis.update(tickvals=tickvals,
                     ticktext=[f"<i>{t}</i>" for t in ticklabels])
-        return axis
+    return axis
 
 
 def mpl_radial_axis(viewer):
@@ -201,7 +201,8 @@ def rectilinear_2d_vectors(viewer, layer_state, marker, mask, x, y, legend_group
     vmax = np.nanmax(np.hypot(vx, vy))
     diag = np.hypot(viewer.state.x_max - viewer.state.x_min,
                     viewer.state.y_max - viewer.state.y_min)
-    scale = 0.05 * (layer_state.vector_scaling) * (diag / vmax) * (width / viewer.width())
+    width_ratio = width / viewer.width()
+    scale = 0.05 * (layer_state.vector_scaling) * (diag / vmax) * (width_ratio)
     xrange = abs(viewer.state.x_max - viewer.state.x_min)
     yrange = abs(viewer.state.y_max - viewer.state.y_min)
     minfrac = min(xrange / diag, yrange / diag)
@@ -216,7 +217,8 @@ def rectilinear_2d_vectors(viewer, layer_state, marker, mask, x, y, legend_group
                        showlegend=False,
                        hoverinfo="skip",
                        meta=uuid4().hex)
-    x_vec, y_vec = _adjusted_vector_points(layer_state.vector_origin, scale, x, y, vx, vy)
+    x_vec, y_vec = _adjusted_vector_points(layer_state.vector_origin, scale,
+                                           x, y, vx, vy)
     if layer_state.cmap_mode == "Fixed":
         fig = ff.create_quiver(x_vec, y_vec, vx, vy, **vector_info)
         fig.update_traces(marker=dict(color=marker["color"]))
@@ -354,7 +356,9 @@ def trace_data_for_layer(viewer, layer_state, hover_data=None, add_data_label=Tr
     degrees = viewer.state.using_degrees
     proj = projection_type(viewer.state)
     if polar:
-        scatter_info.update(theta=x, r=y, thetaunit="degrees" if degrees else "radians")
+        scatter_info.update(theta=x,
+                            r=y,
+                            thetaunit="degrees" if degrees else "radians")
         traces["scatter"] = [go.Scatterpolar(**scatter_info)]
     elif rectilinear:
         scatter_info.update(x=x, y=y)
