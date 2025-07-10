@@ -24,7 +24,8 @@ class TestQtExporter:
                 self.tool = subtool
                 break
         else:
-            raise Exception(f"Could not find {self.tool_id} tool in viewer")
+            msg = f"Could not find {self.tool_id} tool in viewer"
+            raise ValueError(msg)
 
     def teardown_method(self, method):
         self.viewer.close(warn=False)
@@ -47,9 +48,13 @@ class TestQtExporter:
         output_path = tmpdir.join(output_filename).strpath
         with patch("qtpy.compat.getsavefilename") as fd:
             fd.return_value = output_path, "html"
-            with patch.object(SaveHoverDialog, "exec_", self.auto_accept_selectdialog()), \
-                 patch.object(SortComponentsDialog, "exec_", self.auto_accept_selectdialog()), \
-                 patch.object(VolumeOptionsDialog, "exec_", self.auto_accept_messagebox()), \
-                 patch.object(QMessageBox, "exec_", self.auto_accept_messagebox()):
+            with patch.object(SaveHoverDialog, "exec_",
+                              self.auto_accept_selectdialog()), \
+                 patch.object(SortComponentsDialog, "exec_",
+                              self.auto_accept_selectdialog()), \
+                 patch.object(VolumeOptionsDialog, "exec_",
+                              self.auto_accept_messagebox()), \
+                 patch.object(QMessageBox, "exec_",
+                              self.auto_accept_messagebox()):
                 self.tool.activate()
         return output_path

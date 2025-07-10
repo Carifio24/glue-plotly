@@ -1,10 +1,10 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 
-importorskip("glue_qt")
+pytest.importorskip("glue_qt")
 
 from glue_qt.viewers.image.data_viewer import ImageViewer  # noqa: E402
 from numpy import arange, ones  # noqa: E402

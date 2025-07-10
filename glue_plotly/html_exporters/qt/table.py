@@ -11,8 +11,7 @@ from qtpy.QtWidgets import QDialog
 from glue.config import viewer_tool
 from glue.core import BaseData
 from glue_plotly import PLOTLY_LOGO
-
-from ...sort_components import SortComponentsDialog
+from glue_plotly.sort_components import SortComponentsDialog
 
 try:
     import dask.array as da
@@ -62,7 +61,8 @@ class PlotlyTableExport(Tool):
         n_rows = model.rowCount()
         n_cols = model.columnCount()
 
-        data = [[self._data_for_cell(row, col) for row in range(n_rows)] for col in range(n_cols)]
+        data = [[self._data_for_cell(row, col) for row in range(n_rows)]
+                for col in range(n_cols)]
 
         # Keep as strings for formatting consistency with table viewer
         cells = [[str(x) for x in col] for col in data]
@@ -114,7 +114,8 @@ class PlotlyTableExport(Tool):
                     args=[
                         dict(
                             cells=dict(
-                                values=[[str(x) for x in scores[c].values] for c in column_names],
+                                values=[[str(x) for x in scores[c].values]
+                                        for c in column_names],
                                 fill=dict(color=[sort_colors])
                             )
                         )

@@ -60,6 +60,37 @@ lint.ignore = [
     "PLW0602",  # global-variable-not-assigned
     "PLW0603",  # global-statement
     "PLW2901",  # redefined-loop-name
+
+    # flake8-use-pathlib (PTH)
+    "PTH100",  # os-path-abspath
+    "PTH102",  # os-mkdir
+    "PTH103",  # os-makedirs
+    "PTH107",  # os-remove
+    "PTH108",  # os-unlink
+    "PTH109",  # os-getcwd
+    "PTH110",  # os-path-exists
+    "PTH111",  # os-path-expanduser
+    "PTH116",  # os-stat
+    "PTH117",  # os-path-isabs
+    "PTH118",  # os-path-join
+    "PTH119",  # os-path-basename
+    "PTH120",  # os-path-dirname
+    "PTH122",  # os-path-splitext
+    "PTH123",  # builtin-open
+
+    # pyupgrade (UP)
+    "UP004",  # Class `{name}` inherits from `object`
+    "UP008",  # Use `super()` instead of `super(__class__, self)`
+    "UP009",  # UTF-8 encoding declaration is unnecessary
+    "UP015",  # Unnecessary mode argument
+    "UP024",  # Replace aliased errors with `OSError`
+    "UP028",  # Replace `yield` over for loop with `yield from`
+    "UP030",  # Use implicit references for positional format fields
+    "UP031",  # Use format specifiers instead of percent format
+    "UP032",  # Use f-string instead of `format` call
+    "UP034",  # Avoid extraneous parentheses
+    "UP036",  # Version block is outdated for minimum Python version
+    "UP039",  # Unnecessary parentheses after class definition
 ]
 lint.unfixable = [
     "E711"  # NoneComparison. Hard to fix b/c numpy has it's own None.

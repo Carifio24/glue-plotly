@@ -1,10 +1,10 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 
-importorskip("glue_qt")
+pytest.importorskip("glue_qt")
 
 from glue_qt.viewers.profile import ProfileViewer  # noqa: E402
 

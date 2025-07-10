@@ -15,7 +15,9 @@ class SaveHoverDialog(BaseSaveHoverDialog, QDialog):
 
     def __init__(self, data_collection=None, parent=None, checked_dictionary=None):
 
-        BaseSaveHoverDialog.__init__(self, data_collection=data_collection, checked_dictionary=checked_dictionary)
+        BaseSaveHoverDialog.__init__(self,
+                                     data_collection=data_collection,
+                                     checked_dictionary=checked_dictionary)
         QDialog.__init__(self, parent=parent)
 
         self.ui = load_ui("save_hover.ui", self,
@@ -46,7 +48,8 @@ class SaveHoverDialog(BaseSaveHoverDialog, QDialog):
                 item.setForeground(Qt.gray)
             else:
                 item = QListWidgetItem(component.label)
-                if self.checked_dictionary[self.state.data.label].get(component.label, False):
+                data_label = self.state.data.label
+                if self.checked_dictionary[data_label].get(component.label, False):
                     item.setCheckState(Qt.Checked)
                 else:
                     item.setCheckState(Qt.Unchecked)

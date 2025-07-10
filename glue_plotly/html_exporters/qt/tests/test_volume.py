@@ -1,11 +1,11 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 
-importorskip("glue_qt")
-importorskip("glue_vispy_viewers")
+pytest.importorskip("glue_qt")
+pytest.importorskip("glue_vispy_viewers")
 
 from glue_vispy_viewers.volume.qt.volume_viewer import VispyVolumeViewer  # noqa: E402
 from numpy import arange, ones  # noqa: E402

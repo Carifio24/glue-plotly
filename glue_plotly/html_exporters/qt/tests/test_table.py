@@ -1,10 +1,10 @@
 import os
 
-from pytest import importorskip
+import pytest
 
 from glue.core import Data
 
-importorskip("glue_qt")
+pytest.importorskip("glue_qt")
 
 from glue_qt.app import GlueApplication  # noqa: E402
 from glue_qt.viewers.table import TableViewer  # noqa: E402
