@@ -1,0 +1,71 @@
+extend = "pyproject.toml"
+lint.ignore = [
+    # NOTE: to find a good code to fix, run:
+    # ruff check --select="ALL" --statistics glue_plotly/<subpackage>
+
+    # flake8-unused-arguments (ARG)
+    "ARG001",  # unused-function-argument
+    "ARG002",  # unused-method-argument
+    "ARG003",  # unused-class-method-argument
+    "ARG004",  # unused-static-method-argument
+    "ARG005",  # unused-lambda-argument
+
+    # pydocstyle (D)
+    # Missing Docstrings
+    "D100",  # undocumented-public-module
+    "D101",  # undocumented-public-class
+    "D103",  # undocumented-public-function
+    "D104",  # undocumented-public-package
+    "D202",  # blank-line-after-function
+    "D204",  # incorrect-blank-line-after-class
+    "D205",  # blank-line-after-summary
+    "D209",  # new-line-after-last-paragraph
+    "D210",  # surrounding-whitespace
+    "D211",  # blank-line-before-class
+    "D214",  # overindented-section
+    # Docstring Content Issues
+    "D401",  # non-imperative-mood.
+    "D404",  # docstring-starts-with-this
+    "D406",  # missing-new-line-after-section-name
+    "D407",  # missing-dashed-underline-after-section
+    "D409",  # mismatched-section-underline-length
+    "D411",  # no-blank-line-before-section
+    "D412",  # blank-lines-between-header-and-content
+    "D414",  # empty-docstring-section
+
+    # eradicate (ERA)
+    # NOTE: be careful that developer notes are kept.
+    "ERA001",  # commented-out-code
+
+    # flake8-boolean-trap (FBT)  : boolean flags should be kwargs, not args
+    # NOTE: a good thing to fix, but changes API.
+    "FBT002",  # boolean-default-value-in-function-definition
+    "FBT003",  # boolean-positional-value-in-function-call
+
+    # pygrep-hooks (PGH)
+    "PGH004",  # Use specific rule codes when using `noqa`
+
+    # Pylint (PLC, PLE, PLR, PLW)
+    "PLR0402",  # ConsiderUsingFromImport
+    "PLR0911",  # too-many-return-statements
+    "PLR0912",  # too-many-branches
+    "PLR0913",  # too-many-args
+    "PLR0915",  # too-many-statements
+    "PLR1704",  # Redefining argument with the local name `{name}`
+    "PLR1711",  # Useless `return` statement at end of function
+    "PLR1714",  # Consider merging multiple comparisons
+    "PLR2004",  # MagicValueComparison
+    "PLR5501",  # collapsible-else-if
+    "PLW0120",  # useless-else-on-loop
+    "PLW0602",  # global-variable-not-assigned
+    "PLW0603",  # global-statement
+    "PLW2901",  # redefined-loop-name
+]
+lint.unfixable = [
+    "E711"  # NoneComparison. Hard to fix b/c numpy has it's own None.
+]
+
+[lint.extend-per-file-ignores]
+"glue_plotly/viewers/common/tests/base_viewer_tests.py" = [
+    "S101",
+]
