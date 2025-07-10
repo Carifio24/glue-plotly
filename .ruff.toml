@@ -87,6 +87,7 @@ lint.ignore = [
 
     # tryceratops (TRY)
     "TRY003",  # raise-vanilla-args
+    "TRY004",  # prefer-type-error
 
     # pyupgrade (UP)
     "UP004",  # Class `{name}` inherits from `object`

@@ -59,7 +59,7 @@ def isomin_for_layer(viewer_or_state, layer):
             parent_state = parent if isinstance(parent, State) else parent.state
             return parent_state.vmin
 
-    state = layer if isinstance(layer, State) else layer
+    state = layer if isinstance(layer, State) else layer.state
     return state.vmin
 
 
@@ -70,7 +70,7 @@ def isomax_for_layer(viewer_or_state, layer):
             parent_state = parent if isinstance(parent, State) else parent.state
             return parent_state.vmax
 
-    state = layer if isinstance(layer, State) else layer
+    state = layer if isinstance(layer, State) else layer.state
     return state.vmax
 
 
