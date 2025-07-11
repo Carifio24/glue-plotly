@@ -62,7 +62,8 @@ RGBA_PATTERN = (
 def rgba_string_to_values(rgba_str):
     m = match(RGBA_PATTERN, rgba_str)
     if not m or len(m.groups()) != 4:
-        raise ValueError("Invalid RGBA expression")
+        msg = "Invalid RGBA expression"
+        raise ValueError(msg)
     r, g, b, a = m.groups()
     return [int(t) for t in (r, g, b, a)]
 

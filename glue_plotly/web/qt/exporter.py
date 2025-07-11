@@ -144,15 +144,16 @@ class QtPlotlyExporter(QtWidgets.QDialog):
             plotly.sign_in(auth["username"], auth["api_key"])
             plotly_url = plotly.plot(*self.plotly_args, **self.plotly_kwargs)
         except PlotlyError as exc:
-            account_community_private = "Accounts on the Community Plan cannot save private files"
+            community_private_msg = \
+                    "Accounts on the Community Plan cannot save private files"
             logger.exception("Plotly exception:")
             if ("the supplied API key doesn't match our records" in exc.args[0] or
                     "Sign in failed" in exc.args[0]):
                 self.set_status("Authentication failed", color="red")
             elif "filled its quota of private files" in exc.args[0]:
                 self.set_status("Maximum number of private plots reached", color="red")
-            elif account_community_private in exc.args[0]:
-                self.set_status(account_community_private, color="red")
+            elif community_private_msg in exc.args[0]:
+                self.set_status(community_private_msg, color="red")
             else:
                 self.set_status("An unexpected error occurred", color="red")
             return

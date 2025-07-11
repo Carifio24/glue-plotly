@@ -108,6 +108,9 @@ lint.unfixable = [
 ]
 
 [lint.extend-per-file-ignores]
+"setup.py" = [
+    "S101",  # assert
+]
 "glue_plotly/viewers/common/tests/base_viewer_tests.py" = [
     "S101",  # assert
 ]

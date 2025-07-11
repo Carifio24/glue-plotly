@@ -111,8 +111,6 @@ def scatter_mode(layer_state):
 
 
 def rectilinear_lines(layer_state, marker, x, y, legend_group=None):
-    traces = []
-
     line = dict(dash=LINESTYLES[layer_state.linestyle], width=layer_state.linewidth)
 
     if layer_state.cmap_mode == "Fixed":
@@ -127,8 +125,9 @@ def rectilinear_lines(layer_state, marker, x, y, legend_group=None):
         # generate list of indices to parse colors over
         indices = np.repeat(range(len(x)), 2)
         indices = indices[1:len(x) * 2 - 1]
-        for i in range(len(segments)):
-            traces.append(go.Scatter(
+
+        traces = [
+            go.Scatter(
                 x=[segments[i][0][0], segments[i][1][0]],
                 y=[segments[i][0][1], segments[i][1][1]],
                 mode="lines",
@@ -140,8 +139,12 @@ def rectilinear_lines(layer_state, marker, x, y, legend_group=None):
                 showlegend=False,
                 visible=layer_state.line_visible,
                 hoverinfo="skip",
-                meta=line_id)
+                meta=line_id
             )
+            for i in range(len(segments))
+        ]
+    else:
+        traces = []
 
     return line, traces
 

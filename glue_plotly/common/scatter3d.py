@@ -113,7 +113,8 @@ def symbol_for_geometry(geometry: str) -> str:
     symbol = _IPYVOLUME_GEOMETRY_SYMBOLS.get(geometry)
     if symbol is not None:
         return symbol
-    raise ValueError(f"Invalid geometry: {geometry}")
+    msg = f"Invalid geometry: {geometry}"
+    raise ValueError(msg)
 
 
 def traces_for_layer(viewer_state, layer_state, hover_data=None, add_data_label=True):
