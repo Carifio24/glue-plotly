@@ -86,6 +86,9 @@ class PlotlyScatter2DStaticExport(Tool):
                 if not proceed:
                     return
 
+        del layout_config["width"]
+        del layout_config["height"]
+        layout_config.update(autosize=True)
         layout = go.Layout(**layout_config)
         fig = go.Figure(layout=layout)
 
