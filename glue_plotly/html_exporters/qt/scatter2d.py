@@ -130,6 +130,6 @@ class PlotlyScatter2DStaticExport(Tool):
             ]
         )
 
-        config = dict(responsive=True, displayModeBar=True)
+        config = dict(responsive=True, displayModeBar=False)
 
         plot(fig, filename=filename, auto_open=False, config=config)
