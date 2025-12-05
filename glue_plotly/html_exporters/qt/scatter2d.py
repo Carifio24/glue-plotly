@@ -105,4 +105,31 @@ class PlotlyScatter2DStaticExport(Tool):
                                       add_data_label=add_data_label)
             fig.add_traces(traces)
 
-        plot(fig, filename=filename, auto_open=False)
+        positions = ["Sun", "P1", "P2"]
+        colors = ["#f8f8f4", "#10fdf5", "#f3ab9b"]
+        buttons = [
+            dict(label=name,
+                 method="update",
+                 args=[{"visible": [True, True] + [i == index for i in range(len(positions))]}]
+            ) for index, name in enumerate(positions)
+        ]
+        fig.update_layout(
+            autosize=True,
+            showlegend=False,
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    direction="left",
+                    bgcolor="darkgray",
+                    font=dict(color="black"),
+                    active=0,
+                    x=0.57,
+                    y=1.2,
+                    buttons=buttons
+                )
+            ]
+        )
+
+        config = dict(responsive=True, displayModeBar=True)
+
+        plot(fig, filename=filename, auto_open=False, config=config)
