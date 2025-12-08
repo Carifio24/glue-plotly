@@ -57,6 +57,8 @@ def add_scattergeo_size_legend(fig, sizes, labels=None, units="", text_color="bl
     update = dict(
         margin=dict(r=120),
         legend=dict(
+            itemclick=False,
+            itemdoubleclick=False,
             font=dict(color=text_color),
             x=1.05,
             y=0.95
@@ -299,7 +301,7 @@ class PlotlyScatter2DStaticExport(Tool):
             labels=labels,
             units="m",
             text_color="white",
-            title="Apparent magnitude",
+            title="m",
         )
 
 
