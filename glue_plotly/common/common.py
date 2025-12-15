@@ -69,7 +69,6 @@ def base_layout_config(viewer, include_dimensions=True, **kwargs):
             l=margin_h,
             b=margin_v,
             t=margin_v,
-            pad=10,
         ),
         paper_bgcolor=settings.BACKGROUND_COLOR,
         plot_bgcolor=settings.BACKGROUND_COLOR,
