@@ -86,6 +86,8 @@ def setup_jupyter():
 
     from .html_exporters.jupyter import setup as exporters_setup
     from .viewers.common import tools  # noqa
+    from .viewers.histogram.viewer import PlotlyHistogramView  # noqa
+    from .viewers.scatter.viewer import PlotlyScatterView  # noqa
 
     exporters_setup()
 
