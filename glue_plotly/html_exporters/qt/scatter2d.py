@@ -200,7 +200,7 @@ class PlotlyScatter2DStaticExport(Tool):
         #     return
 
         # filename, _ = compat.getsavefilename(parent=self.viewer, basedir="plot.html")
-        filename = "/home/jon/dev/klessen-interactive-figure/mollweide_nolegend_bw.html"
+        filename = "/Users/jon/dev/klessen-interactive-figure/mollweide_nolegend_bw.html"
         if not filename:
             return
 
