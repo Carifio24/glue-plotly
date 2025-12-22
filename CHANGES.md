@@ -1,5 +1,20 @@
 # Full changelog
 
+## v0.13.1 - 2025-12-22
+
+<!-- Release notes generated using configuration in .github/release.yml at main -->
+### What's Changed
+
+#### Bug Fixes
+
+* Update colors in full-sphere scatters by @Carifio24 in https://github.com/glue-viz/glue-plotly/pull/139
+
+#### Other Changes
+
+* Remove padding from base layout configuration by @Carifio24 in https://github.com/glue-viz/glue-plotly/pull/140
+
+**Full Changelog**: https://github.com/glue-viz/glue-plotly/compare/v0.13.0...v0.13.1
+
 ## v0.13.0 - 2025-11-24
 
 <!-- Release notes generated using configuration in .github/release.yml at main -->
