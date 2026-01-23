@@ -200,7 +200,7 @@ class PlotlyScatter2DStaticExport(Tool):
         #     return
 
         # filename, _ = compat.getsavefilename(parent=self.viewer, basedir="plot.html")
-        filename = "/Users/jon/dev/klessen-interactive-figure/mollweide_nolegend_bw.html"
+        filename = "/home/jon/dev/klessen-interactive-figure/mollweide_nolegend_bw.html"
         if not filename:
             return
 
@@ -274,6 +274,8 @@ class PlotlyScatter2DStaticExport(Tool):
                                       layer.state,
                                       hover_data=hover_data,
                                       add_data_label=add_data_label)
+            for trace in traces:
+                trace.update(showlegend=False)
             fig.add_traces(traces)
 
         positions = ["Sun", "P1", "P2"]
@@ -287,8 +289,6 @@ class PlotlyScatter2DStaticExport(Tool):
                  ]
             ) for index, name in enumerate(positions)
         ]
-        for trace in fig.data:
-            trace.update(showlegend=False)
         fig.update_layout(
             autosize=True,
             width=None,
