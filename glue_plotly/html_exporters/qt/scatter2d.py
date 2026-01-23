@@ -282,7 +282,7 @@ class PlotlyScatter2DStaticExport(Tool):
             dict(label=name,
                  method="update",
                  args=[
-                     {"visible": ([True] * n_traces_so_far) + [i == index for i in range(len(positions))] + [True, True]},
+                     {"visible": ([True] * n_traces_so_far) + [True, True] + [i == index for i in range(len(positions))]},
                      {"geo.framecolor": colors[index]},
                  ]
             ) for index, name in enumerate(positions)
