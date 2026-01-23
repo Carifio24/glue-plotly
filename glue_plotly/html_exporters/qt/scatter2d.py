@@ -279,7 +279,7 @@ class PlotlyScatter2DStaticExport(Tool):
             fig.add_traces(traces)
 
         positions = ["Sun", "P1", "P2"]
-        colors = ["#f8f8f4", "#10fdf5", "#f3ab9b"]
+        colors = ["#7af08f", "#10fdf5", "#f3ab9b"]
         buttons = [
             dict(label=name,
                  method="update",
