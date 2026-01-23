@@ -243,44 +243,6 @@ class PlotlyScatter2DStaticExport(Tool):
 
         layers = layers_to_export(self.viewer)
         add_data_label = data_count(layers) > 1
-        for layer in layers:
-            hover_data = checked_dictionary[layer.state.layer.label]
-            traces = traces_for_layer(self.viewer,
-                                      layer.state,
-                                      hover_data=hover_data,
-                                      add_data_label=add_data_label)
-            fig.add_traces(traces)
-
-        positions = ["Sun", "P1", "P2"]
-        colors = ["#f8f8f4", "#10fdf5", "#f3ab9b"]
-        buttons = [
-            dict(label=name,
-                 method="update",
-                 args=[
-                     {"visible": [True, True] + [i == index for i in range(len(positions))]},
-                     {"geo.framecolor": colors[index]},
-                 ]
-            ) for index, name in enumerate(positions)
-        ]
-        for trace in fig.data:
-            trace.update(showlegend=False)
-        fig.update_layout(
-            autosize=True,
-            width=None,
-            height=None,
-            updatemenus=[
-                dict(
-                    type="buttons",
-                    direction="left",
-                    bgcolor="darkgray",
-                    font=dict(color="black"),
-                    active=0,
-                    x=0.57,
-                    y=1.2,
-                    buttons=buttons
-                )
-            ]
-        )
 
         def size_for_value(v):
             scale = 0.251188643150958
@@ -304,6 +266,46 @@ class PlotlyScatter2DStaticExport(Tool):
             title="m",
         )
 
+        n_traces_so_far = len(fig.data)
+        layers = sorted(layers, key=lambda layer: -layer.zorder)
+        for layer in layers:
+            hover_data = checked_dictionary[layer.state.layer.label]
+            traces = traces_for_layer(self.viewer,
+                                      layer.state,
+                                      hover_data=hover_data,
+                                      add_data_label=add_data_label)
+            fig.add_traces(traces)
+
+        positions = ["Sun", "P1", "P2"]
+        colors = ["#f8f8f4", "#10fdf5", "#f3ab9b"]
+        buttons = [
+            dict(label=name,
+                 method="update",
+                 args=[
+                     {"visible": ([True] * n_traces_so_far) + [i == index for i in range(len(positions))] + [True, True]},
+                     {"geo.framecolor": colors[index]},
+                 ]
+            ) for index, name in enumerate(positions)
+        ]
+        for trace in fig.data:
+            trace.update(showlegend=False)
+        fig.update_layout(
+            autosize=True,
+            width=None,
+            height=None,
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    direction="left",
+                    bgcolor="darkgray",
+                    font=dict(color="black"),
+                    active=0,
+                    x=0.57,
+                    y=1.2,
+                    buttons=buttons
+                )
+            ]
+        )
 
         config = dict(responsive=True, displayModeBar=False)
 
