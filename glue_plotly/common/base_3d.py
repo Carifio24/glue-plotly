@@ -1,4 +1,5 @@
 import re
+from contextlib import suppress
 
 from glue.config import settings
 from glue_plotly.common import DEFAULT_FONT
@@ -29,21 +30,15 @@ def projection_type(viewer_state):
 
 
 def get_resolution(viewer_state):
-    try:
-        from glue_vispy_viewers.volume.viewer_state import Vispy3DVolumeViewerState
-        if isinstance(viewer_state, Vispy3DVolumeViewerState):
-            return viewer_state.resolution
-    except ImportError:
-        pass
+    resolution = getattr(viewer_state, "resolution", None)
+    if resolution is not None:
+        return resolution
 
-    try:
-        from glue_jupyter.common.state3d import VolumeViewerState
-        if isinstance(viewer_state, VolumeViewerState):
-            resolutions = tuple(getattr(state, "max_resolution", None)
+    resolutions = tuple(getattr(state, "max_resolution", None)
                                 for state in viewer_state.layers)
-            return max((res for res in resolutions if res is not None), default=256)
-    except ImportError:
-        pass
+
+    with suppress(ValueError):
+        return max((res for res in resolutions if res is not None), default=256)
 
     return 256
 
