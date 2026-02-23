@@ -1,5 +1,6 @@
+from contextlib import suppress
+
 import plotly.graph_objs as go
-from glue_vispy_viewers.scatter.layer_artist import ScatterLayerArtist
 from plotly.offline import plot
 
 from glue.config import viewer_tool
@@ -8,6 +9,20 @@ from glue_plotly.common.common import data_count, layers_to_export
 from glue_plotly.common.scatter3d import traces_for_layer as scatter3d_traces_for_layer
 from glue_plotly.common.volume import traces_for_layer as volume_traces_for_layer
 from glue_plotly.jupyter_base_export_tool import JupyterBaseExportTool
+
+VOLUME_LAYER_STATES = []
+
+with suppress(ImportError):
+    from glue_jupyter.ipyvolume.volume.layer_state import VolumeLayerState
+    VOLUME_LAYER_STATES.append(VolumeLayerState)
+
+with suppress(ImportError):
+    from glue.viewers.volume3d.layer_state import VolumeLayerState3D
+    VOLUME_LAYER_STATES.append(VolumeLayerState3D)
+
+with suppress(ImportError):
+    from glue_vispy_viewers.volume.layer_state import VolumeLayerState
+    VOLUME_LAYER_STATES.append(VolumeLayerState)
 
 
 @viewer_tool
@@ -28,13 +43,13 @@ class PlotlyScatter3DStaticExport(JupyterBaseExportTool):
         bds = bounds(self.viewer.state, with_resolution=True)
         count = 5
         for layer in layers:
-            if isinstance(layer, ScatterLayerArtist):
-                traces = scatter3d_traces_for_layer(self.viewer.state, layer.state,
-                                                    add_data_label=add_data_label)
-            else:
+            if isinstance(layer.state, tuple(VOLUME_LAYER_STATES)):
                 traces = volume_traces_for_layer(self.viewer.state, layer.state, bds,
                                                  isosurface_count=count,
                                                  add_data_label=add_data_label)
+            else:
+                traces = scatter3d_traces_for_layer(self.viewer.state, layer.state,
+                                                    add_data_label=add_data_label)
 
             for trace in traces:
                 fig.add_trace(trace)

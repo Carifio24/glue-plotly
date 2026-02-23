@@ -10,11 +10,6 @@ from glue.utils import ensure_numerical
 from glue_plotly.common import color_info, sanitize
 from glue_plotly.common.base_3d import bbox_mask
 
-try:
-    from glue_vispy_viewers.scatter.layer_state import ScatterLayerState
-except ImportError:
-    ScatterLayerState = type(None)
-
 
 def size_info(layer_state, mask, size_att="size_attribute"):
 
@@ -123,10 +118,15 @@ def traces_for_layer(viewer_state, layer_state, hover_data=None, add_data_label=
     y = layer_state.layer[viewer_state.y_att]
     z = layer_state.layer[viewer_state.z_att]
 
-    vispy_layer_state = isinstance(layer_state, ScatterLayerState)
-    cmap_mode_attr = "color_mode" if vispy_layer_state else "cmap_mode"
-    cmap_attr = "cmap_attribute" if vispy_layer_state else "cmap_att"
-    size_attr = "size_attribute" if vispy_layer_state else "size_att"
+    cmap_mode_attr = "color_mode" \
+            if hasattr(layer_state, "color_mode") \
+            else "cmap_mode"
+    cmap_attr = "cmap_attribute" \
+            if hasattr(layer_state, "cmap_attribute") \
+            else "cmap_att"
+    size_attr = "size_attribute" \
+            if hasattr(layer_state, "size_attribute") \
+            else "size_att"
     arrs = [x, y, z]
     if getattr(layer_state, cmap_mode_attr) == "Linear":
         cvals = layer_state.layer[getattr(layer_state, cmap_attr)].copy()
