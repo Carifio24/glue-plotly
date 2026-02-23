@@ -10,7 +10,6 @@ from glue_plotly.common.scatter3d import traces_for_layer as scatter3d_traces_fo
 from glue_plotly.common.volume import traces_for_layer as volume_traces_for_layer
 from glue_plotly.jupyter_base_export_tool import JupyterBaseExportTool
 
-
 VOLUME_LAYER_STATES = []
 
 with suppress(ImportError):
