@@ -280,31 +280,31 @@ class PlotlyScatter2DStaticExport(Tool):
 
         positions = ["Sun", "P1", "P2"]
         colors = ["#7af08f", "#10fdf5", "#f3ab9b"]
-        buttons = [
-            dict(label=name,
-                 method="update",
-                 args=[
-                     {"visible": ([True] * n_traces_so_far) + [True, True] + [i == index for i in range(len(positions))]},
-                     {"geo.framecolor": colors[index]},
-                 ]
-            ) for index, name in enumerate(positions)
-        ]
+        # buttons = [
+        #     dict(label=name,
+        #          method="update",
+        #          args=[
+        #              {"visible": ([True] * n_traces_so_far) + [True, True] + [i == index for i in range(len(positions))]},
+        #              {"geo.framecolor": colors[index]},
+        #          ]
+        #     ) for index, name in enumerate(positions)
+        # ]
         fig.update_layout(
             autosize=True,
             width=None,
             height=None,
-            updatemenus=[
-                dict(
-                    type="buttons",
-                    direction="left",
-                    bgcolor="darkgray",
-                    font=dict(color="black"),
-                    active=0,
-                    x=0.57,
-                    y=1.2,
-                    buttons=buttons
-                )
-            ]
+            # updatemenus=[
+            #     dict(
+            #         type="buttons",
+            #         direction="left",
+            #         bgcolor="darkgray",
+            #         font=dict(color="black"),
+            #         active=0,
+            #         x=0.57,
+            #         y=1.2,
+            #         buttons=buttons
+            #     )
+            # ]
         )
 
         config = dict(responsive=True, displayModeBar=False)
